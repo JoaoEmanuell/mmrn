@@ -16,6 +16,11 @@ interface DropdownMenuListProps {
 }
 
 export function DropdownMenuList(props: DropdownMenuListProps) {
+    const defaultOption = {
+        key: '-1',
+        value: 'Selecione o louvor',
+        disabled: true,
+    }
     return (
         <View className="mt-5">
             <LabelFormControl text={props.labelText} />
@@ -23,7 +28,7 @@ export function DropdownMenuList(props: DropdownMenuListProps) {
                 setSelected={(val: string) => props.setSelected(val)}
                 data={props.data}
                 save="value"
-                defaultOption={props.data[0]}
+                defaultOption={defaultOption}
                 searchPlaceholder={props.searchPlaceholder}
                 onSelect={props.onSelect}
                 notFoundText={props.notFoundText}

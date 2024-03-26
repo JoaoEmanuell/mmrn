@@ -22,10 +22,16 @@ export function HomeScreen({ navigation }) {
         } else {
             const praiseNumber = dataJson['praises'][dropdownMenuListValue]
 
-            if (praiseNumber === undefined) {
+            if (
+                praiseNumber === undefined ||
+                dropdownMenuListValue === undefined
+            ) {
             }
 
-            navigation.navigate('PraiseScreen', { praiseNumber: praiseNumber })
+            navigation.navigate('PraiseScreen', {
+                praiseNumber: praiseNumber,
+                praiseTitle: dropdownMenuListValue,
+            })
         }
     }
 
