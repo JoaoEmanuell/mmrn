@@ -6,9 +6,13 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { HomeScreen } from './screens/HomeScreen'
 import { PraiseScreen } from './screens/PraiseScreen'
 
+import { getOnlineVersion } from './source/updateJson'
+
 const Stack = createNativeStackNavigator()
 
 export default function App() {
+    getOnlineVersion() // update the praises
+
     return (
         <NavigationContainer>
             <Stack.Navigator initialRouteName="Home">

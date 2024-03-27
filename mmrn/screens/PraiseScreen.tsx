@@ -22,7 +22,6 @@ export function PraiseScreen({ navigation, route }) {
             </Text>
             <View>
                 {praise.organization.map((organizationPosition) => {
-                    console.log(organizationPosition)
                     return (
                         <View key={getRandomElementKey()} className="mb-4">
                             {praise.data[organizationPosition].map((line) => {

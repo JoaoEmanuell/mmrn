@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar'
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, ScrollView } from 'react-native'
 import { DropdownMenuList } from '../components/form/DropdownMenuList'
 
 import { readDataJson } from '../source/readDataJson'
@@ -36,7 +36,7 @@ export function HomeScreen({ navigation }) {
     }
 
     return (
-        <View className="p-5 mt-5 w-full max-w-lg">
+        <ScrollView className="p-5 w-full max-w-lg bg-white">
             <Text className="font-title text-2xl font-bold mb-2 text-center">
                 Louvores mandacaru
             </Text>
@@ -56,6 +56,6 @@ export function HomeScreen({ navigation }) {
             ></DropdownMenuList>
 
             <StatusBar style="auto" />
-        </View>
+        </ScrollView>
     )
 }
