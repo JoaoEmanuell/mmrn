@@ -6,7 +6,7 @@ import { readDataJson } from '../source/readDataJson'
 import { orderPraises } from '../source/orderPraises'
 
 import { getColors } from '../source/darkMode/colors'
-import { getUserPreference } from '../source/darkMode/userPreference'
+import { getUserModePreference } from '../source/darkMode/userPreference'
 import { DarkButton } from '../components/darkMode/DarkButton'
 import { useIsFocused } from '@react-navigation/native'
 import { StatusBar } from 'expo-status-bar'
@@ -39,8 +39,9 @@ export function HomeScreen({ navigation }) {
 
     const isFocused = useIsFocused()
 
-    const setColorMode = () => {
-        if (getUserPreference('dark')) {
+    const setColorMode = async () => {
+        const userPreference = await getUserModePreference('dark')
+        if (userPreference) {
             // dark mode
             setScrollViewColors(colors['containerDark'])
             setTextColors(colors['textDark'])

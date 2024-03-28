@@ -6,7 +6,7 @@ import { getRandomElementKey } from '../source/getRandomElementKey'
 import { useState, useEffect } from 'react'
 import { DarkButton } from '../components/darkMode/DarkButton'
 import { getColors } from '../source/darkMode/colors'
-import { getUserPreference } from '../source/darkMode/userPreference'
+import { getUserModePreference } from '../source/darkMode/userPreference'
 
 const praiseJson = readPraisesJson()
 
@@ -34,8 +34,9 @@ export function PraiseScreen({ navigation, route }) {
         'dark'
     )
 
-    const setColorMode = () => {
-        if (getUserPreference('dark')) {
+    const setColorMode = async () => {
+        const userPreference = await getUserModePreference('dark')
+        if (userPreference) {
             setScrollViewColors(colors['containerDark'])
             setTextColors(colors['textDark'])
             setStatusBarStyle('light')

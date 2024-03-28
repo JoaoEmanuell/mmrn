@@ -11,7 +11,11 @@ import { getOnlineVersion } from './source/updateJson'
 const Stack = createNativeStackNavigator()
 
 export default function App() {
-    getOnlineVersion() // update the praises
+    try {
+        getOnlineVersion() // update the praises
+    } catch (err) {
+        console.log(err)
+    }
 
     return (
         <NavigationContainer>

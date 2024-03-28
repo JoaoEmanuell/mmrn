@@ -7,7 +7,7 @@ import Sun from '../../assets/icons/sun.png'
 import Moon from '../../assets/icons/moon.png'
 
 import {
-    getUserPreference,
+    getUserModePreference,
     saveUserPreference,
 } from '../../source/darkMode/userPreference'
 
@@ -21,20 +21,22 @@ export function DarkButton(props: DarkButtonProps) {
     const isFocused = useIsFocused()
 
     useEffect(() => {
-        if (getUserPreference('dark')) {
-            setIcon(Moon)
-        } else {
-            setIcon(Sun)
-        }
+        getUserModePreference('dark').then((preference) => {
+            if (preference) {
+                setIcon(Moon)
+            } else {
+                setIcon(Sun)
+            }
+        })
     }, [isFocused])
 
     const changeIcon = () => {
         if (icon === Sun) {
             setIcon(Moon)
-            saveUserPreference('dark', true)
+            saveUserPreference('dark', 'true')
         } else {
             setIcon(Sun)
-            saveUserPreference('dark', false)
+            saveUserPreference('dark', 'false')
         }
         props.onPress()
     }

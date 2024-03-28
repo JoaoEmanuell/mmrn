@@ -1,12 +1,15 @@
-import SyncStorage from 'sync-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export const saveUserPreference = (name, preference) => {
-    // const data = await SyncStorage.init()
-    SyncStorage.set(name, preference)
+export const saveUserPreference = async (name, preference) => {
+    await AsyncStorage.setItem(name, preference)
     return true
 }
 
-export const getUserPreference = (name) => {
-    // const data = await SyncStorage.init();
-    return SyncStorage.get(name)
+export const getUserModePreference = async (name) => {
+    const value = await AsyncStorage.getItem(name)
+    if (value === 'true') {
+        return true
+    } else {
+        return false
+    }
 }
