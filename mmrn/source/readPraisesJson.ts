@@ -1,3 +1,5 @@
+import { RNFS, DOCUMENT_DIRECTORY } from "./RNFS"
+
 interface praisesJson {
     praiseId: {
         organization: String[]
@@ -7,7 +9,11 @@ interface praisesJson {
     }
 }
 
-export function readPraisesJson(): praisesJson {
-    const praises_json = require('../assets/json/praises.json')
-    return praises_json
+export function readPraisesJson(): Promise<string | praisesJson> {
+    try {
+        return RNFS.readAsStringAsync(`${DOCUMENT_DIRECTORY}praises.json`)
+    } catch (error) {
+        console.error('Erro ao ler o arquivo JSON:', error)
+        throw error
+    }
 }

@@ -8,18 +8,10 @@ import { DarkButton } from '../components/darkMode/DarkButton'
 import { getColors } from '../source/darkMode/colors'
 import { getUserModePreference } from '../source/darkMode/userPreference'
 
-const praiseJson = readPraisesJson()
-
 export function PraiseScreen({ navigation, route }) {
-    const praiseNumber = String(route.params.praiseNumber)
-    const praise = praiseJson[praiseNumber]
-    if (praise === undefined) {
-        return (
-            <Text className="font-title text-2xl font-bold mb-4 text-center">
-                Louvor ainda não cadastrado!
-            </Text>
-        )
-    }
+    // json
+
+    const [praise, setPraise] = useState<any>()
 
     // colors
 
@@ -60,7 +52,20 @@ export function PraiseScreen({ navigation, route }) {
         navigation.setOptions({
             headerRight: () => <DarkButton onPress={setColorMode} />,
         })
+        readPraisesJson().then((data) => {
+            const praiseJsonParse = JSON.parse(data as unknown as string)
+            const praiseNumber = String(route.params.praiseNumber)
+            setPraise(praiseJsonParse[praiseNumber])
+        })
     }, [navigation])
+
+    if (praise === undefined) {
+        return (
+            <Text className="font-title text-2xl font-bold mb-4 text-center">
+                Louvor ainda não cadastrado!
+            </Text>
+        )
+    }
 
     return (
         <ScrollView

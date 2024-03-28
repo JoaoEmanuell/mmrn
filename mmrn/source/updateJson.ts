@@ -1,6 +1,5 @@
-import { version } from '../assets/json/version'
 import axios from 'axios'
-import FileSystem from 'expo-file-system'
+import { RNFS, DOCUMENT_DIRECTORY } from './RNFS'
 
 const onlineRepositoryUrl =
     'https://raw.githubusercontent.com/JoaoEmanuell/mmrn/develop'
@@ -17,70 +16,118 @@ const axiosConfig = axios.create({
     headers,
 })
 
-const RNFS = FileSystem // require('react-native-fs')
-
-export const getOnlineVersion = () => {
-    axiosConfig.get(`/mmrn/assets/json/version.js`).then((response) => {
-        if (response.status === 200) {
-            const onlineVersion = response.data as String
-            if (
-                `export const version = '${version}'` !== onlineVersion.trim()
-            ) {
-                console.log('Update the jsons!')
-                updateJson() // update the jsons
-                try {
-                    // update version.js file
-                    RNFS.writeAsStringAsync(
-                        '../assets/json/version.js',
-                        `export const version = '${onlineVersion.trim()}`
-                    )
-                    // file written successfully
-                } catch (err) {
-                    console.error(err)
+const getOnlineVersion = async () => {
+    RNFS.readAsStringAsync(`${DOCUMENT_DIRECTORY}version.js`).then(
+        (version) => {
+            axiosConfig.get(`/mmrn/assets/json/version.js`).then((response) => {
+                if (response.status === 200) {
+                    const onlineVersion = response.data as String
+                    if (version == undefined) {
+                        version = '65488771' // random numbers
+                    }
+                    if (version.trim() !== onlineVersion.trim()) {
+                        alert(
+                            'Novos louvores foram encontrados! Iniciando o download deles!'
+                        )
+                        console.log('Update the jsons!')
+                        updateJson() // update the jsons
+                        try {
+                            // update version.js file
+                            RNFS.writeAsStringAsync(
+                                `${DOCUMENT_DIRECTORY}version.js`,
+                                onlineVersion.trim()
+                            ).then((data) => {
+                                console.log('version.js written successfully')
+                            })
+                            // file written successfully
+                        } catch (err) {
+                            console.error(
+                                `Error to get write the version js ${err}`
+                            )
+                        }
+                    }
                 }
-                return true
-            }
+            })
         }
-    })
-    return false
+    )
 }
 
-const updateJson = () => {
+const updateJson = async () => {
     // get the new jsons
 
     // get the data.json
 
-    axiosConfig.get(`/mmrn/assets/json/data.json`).then((response) => {
-        if (response.status === 200) {
-            const dataJson = response.data as String
-            try {
-                RNFS.writeAsStringAsync(
-                    '../assets/json/data.json',
-                    dataJson.toString()
-                )
-                // file written successfully
-                console.log('Data json saved with success!')
-            } catch (err) {
-                console.error(err)
-            }
+    const dataResponse = await axiosConfig.get(`/mmrn/assets/json/data.json`)
+
+    if (dataResponse.status === 200) {
+        try {
+            await RNFS.writeAsStringAsync(
+                `${DOCUMENT_DIRECTORY}data.json`,
+                JSON.stringify(dataResponse.data)
+            )
+            console.log('data.json written successfully')
+        } catch (err) {
+            console.error(`Error to save data json: ${err}`)
         }
-    })
+    }
 
     // get the praises.json
 
-    axiosConfig.get(`/mmrn/assets/json/praises.json`).then((response) => {
+    const praisesResponse = await axiosConfig.get(
+        `/mmrn/assets/json/praises.json`
+    )
+    if (praisesResponse.status === 200) {
+        console.log('Praises json download')
+        try {
+            await RNFS.writeAsStringAsync(
+                `${DOCUMENT_DIRECTORY}praises.json`,
+                JSON.stringify(praisesResponse.data)
+            )
+            console.log('praises.json written successfully')
+        } catch (err) {
+            console.error(`Error to save praise json: ${err}`)
+        }
+    }
+}
+
+const getFirstOnlineVersion = async () => {
+    axiosConfig.get(`/mmrn/assets/json/version.js`).then((response) => {
         if (response.status === 200) {
-            const praisesJson = response.data as String
+            const onlineVersion = response.data as String
             try {
+                // update version.js file
                 RNFS.writeAsStringAsync(
-                    '../assets/json/praises.json',
-                    praisesJson.toString()
-                )
-                console.log('Praises json saved with success!')
+                    `${DOCUMENT_DIRECTORY}version.js`,
+                    onlineVersion.trim()
+                ).then((data) => {
+                    console.log('version.js written successfully')
+                })
+                updateJson() // update the jsons
                 // file written successfully
             } catch (err) {
-                console.error(err)
+                console.error(`Error to get write the version js ${err}`)
             }
+        }
+    })
+}
+
+export const startUpdateJson = async () => {
+    RNFS.readDirectoryAsync(DOCUMENT_DIRECTORY).then(async (data) => {
+        if (
+            !data.includes('version.js') ||
+            !data.includes('praises.json') ||
+            !data.includes('data.json')
+        ) {
+            alert(
+                'Para a primeira execução do aplicativo é necessário você possui acesso a internet!\nCaso contrário não irá aparecer nenhum louvor!'
+            )
+            await getFirstOnlineVersion().then((data) => {
+                console.log('Get the firs version with success!')
+            })
+        } else {
+            await getOnlineVersion().then((data) => {
+                console.log('Get online with success!')
+            })
         }
     })
 }

@@ -6,13 +6,15 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { HomeScreen } from './screens/HomeScreen'
 import { PraiseScreen } from './screens/PraiseScreen'
 
-import { getOnlineVersion } from './source/updateJson'
+import { startUpdateJson } from './source/updateJson'
 
 const Stack = createNativeStackNavigator()
 
 export default function App() {
     try {
-        getOnlineVersion() // update the praises
+        startUpdateJson().then((value) => {
+            console.log('get success')
+        }) // update the praises
     } catch (err) {
         console.log(err)
     }

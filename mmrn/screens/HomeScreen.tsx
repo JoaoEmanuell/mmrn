@@ -11,10 +11,12 @@ import { DarkButton } from '../components/darkMode/DarkButton'
 import { useIsFocused } from '@react-navigation/native'
 import { StatusBar } from 'expo-status-bar'
 
-const dataJson = readDataJson()
-const praisesData = orderPraises(dataJson['praises'])
-
 export function HomeScreen({ navigation }) {
+    // json
+
+    const [dataJson, setDataJson] = useState<any>()
+    const [praisesData, setPraisesData] = useState<any>()
+
     // Dropdown
 
     let [dropdownMenuListValue, setDropdownMenuListValue] = useState('')
@@ -68,6 +70,13 @@ export function HomeScreen({ navigation }) {
         }
         navigation.setOptions({
             headerRight: () => <DarkButton onPress={setColorMode} />,
+        })
+        readDataJson().then((data) => {
+            setDataJson(JSON.parse(data as unknown as string))
+            // setDataJson(data)
+            setPraisesData(
+                orderPraises(JSON.parse(data as unknown as string)['praises'])
+            )
         })
     }, [navigation, isFocused])
 

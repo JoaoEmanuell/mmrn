@@ -1,10 +1,10 @@
-interface dataJson {
-    praises: {
-        name: number
-    }
-}
+import { RNFS, DOCUMENT_DIRECTORY } from "./RNFS"
 
-export function readDataJson(): dataJson {
-    const data_json = require('../assets/json/data.json')
-    return data_json
+export async function readDataJson(): Promise<string> {
+    try {
+        return RNFS.readAsStringAsync(`${DOCUMENT_DIRECTORY}data.json`)
+    } catch (error) {
+        console.error('Erro ao ler o arquivo JSON:', error)
+        throw error
+    }
 }
