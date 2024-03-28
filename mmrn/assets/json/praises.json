@@ -44,5 +44,47 @@
                 ["Tem feito sua vide florescer"]
             ]
         }
+    },
+    "2": {
+        "organization": ["0", "0", "1", "2", "2", "3", "4", "5", "4"],
+        "data": {
+            "0": [
+                ["Sei que foi pago um alto preço"],
+                ["Para que contigo eu fosse um, meu irmão"],
+                ["Quando Jesus derramou sua vida"],
+                ["Ele pensava em ti, ele pensava em mim"],
+                ["Pensava em nós"]
+            ],
+            "1": [
+                ["E nos via redimidos por teu sangue"],
+                ["Lutando um bom combate no Senhor"],
+                ["Lado a lado trabalhando"],
+                ["Sua igreja edificando"],
+                ["E rompendo as barreiras pelo amor"]
+            ],
+            "2": [
+                ["E na força do Espírito Santo"],
+                ["Nós proclamamos aqui"],
+                ["Que pagaremos o preço de sermos"],
+                ["Um só coração no Senhor"],
+                ["E por mais que as trevas militem"],
+                ["E nos tentem separar"],
+                ["Com os nossos olhos em Cristo"],
+                ["Unidos iremos andar"]
+            ],
+            "3": [["Unidos iremos andar"]],
+            "4": [
+                ["Ó, ó, Alfa, Ômega"],
+                ["Cristo, filho"],
+                ["Ó vem, ó vem, ó vem"],
+                ["Senhor Jesus"]
+            ],
+            "5": [
+                ["Maranata"],
+                ["Cristo, filho, mestre"],
+                ["Ó vem, ó vem, ó vem"],
+                ["Senhor Jesus"]
+            ]
+        }
     }
 }
