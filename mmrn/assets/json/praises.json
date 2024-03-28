@@ -117,5 +117,29 @@
                 ["Estamos nós aqui"]
             ]
         }
+    }, 
+    "4": {
+        "organization": ["0", "0", "0", "0", "1", "1", "2", "2", "1", "1"],
+        "data": {
+            "0": [
+                ["Porque Dele e por Ele"],
+                ["Para Ele são todas as coisas"]
+            ],
+            "1": [
+                [
+                    ["A Ele a glória"],
+                    ["A Ele a glória"],
+                    ["A Ele a glória"],
+                    ["Pra sempre"],
+                    ["Amém"]
+                ]
+            ],
+            "2": [
+                ["Quão profundas riquezas"],
+                ["O saber e o conhecer de Deus"],
+                ["Quão insondáveis"],
+                ["Seus juízos e Seus caminhos"]
+            ]
+        }
     }
 }
