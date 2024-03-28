@@ -2,7 +2,7 @@ import axios from 'axios'
 import { RNFS, DOCUMENT_DIRECTORY } from './RNFS'
 
 const onlineRepositoryUrl =
-    'https://raw.githubusercontent.com/JoaoEmanuell/mmrn/develop'
+    'https://raw.githubusercontent.com/JoaoEmanuell/mmrn/master'
 
 const headers = {
     Accept: 'application/json, text/plain, */*',
