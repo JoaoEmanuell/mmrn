@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { NavigationContainer } from '@react-navigation/native'
 
@@ -11,13 +11,15 @@ import { startUpdateJson } from './source/updateJson'
 const Stack = createNativeStackNavigator()
 
 export default function App() {
-    try {
-        startUpdateJson().then((value) => {
-            console.log('get success')
-        }) // update the praises
-    } catch (err) {
-        console.log(err)
-    }
+    useEffect(() => {
+        try {
+            startUpdateJson().then((value) => {
+                console.log('get success')
+            }) // update the praises
+        } catch (err) {
+            console.log(err)
+        }
+    }, [])
 
     return (
         <NavigationContainer>
