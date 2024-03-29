@@ -93,26 +93,40 @@ const setContentInEditSession = () => {
         const session = document.createElement("div")
         session.classList.add("mb-4")
         session.id = `session-id-${data["0"]}`
-        session.addEventListener("click", () => {
-            editSession(session.id)
-        })
+
+        const divForLabelAndTrashButton = document.createElement("div")
+        divForLabelAndTrashButton.classList.add("row", "text-center")
 
         const label = document.createElement("label")
-        label.classList.add("form-label")
+        label.classList.add("form-label", "col")
         label.innerText = `Sessão: ${data["0"]}`
+
+        const trashButton = document.createElement("img")
+        trashButton.src = "static/trash.svg"
+        trashButton.alt = "delete button"
+        trashButton.width = 24
+        trashButton.height = 24
+        trashButton.classList.add("col")
+        trashButton.addEventListener("click", () => {
+            deleteSession(session.id)
+        })
 
         const paragraph = document.createElement("p")
         paragraph.classList.add("form-control")
+        paragraph.addEventListener("click", () => {
+            editSession(session.id)
+        })
 
         let text = "";
-        console.log(data)
         data[1].forEach(subArray => {
             text += subArray[0] + "<br>";
         });
 
         paragraph.innerHTML = text
 
-        session.appendChild(label)
+        divForLabelAndTrashButton.appendChild(label)
+        divForLabelAndTrashButton.appendChild(trashButton)
+        session.appendChild(divForLabelAndTrashButton)
         session.appendChild(paragraph)
         sessionsDiv.appendChild(session)
     })
