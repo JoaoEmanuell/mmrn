@@ -139,5 +139,77 @@
                 ["Seus juízos e Seus caminhos"]
             ]
         }
+    }, 
+    "5": {
+        "organization": ["0", "1", "2", "0", "1", "2", "3", "3", "3", "3", "2", "2"],
+        "data": {
+            "0": [
+                ["Não há nada igual"],
+                ["Não há nada melhor"],
+                ["A que se compara à esperança viva"],
+                ["Tua presença"]
+            ],
+            "1": [
+                ["Eu provei e vi"],
+                ["O mais doce amor"],
+                ["Que liberta o meu ser"],
+                ["E a vergonha desfaz"],
+                ["Tua presença"]
+            ],
+            "2": [
+                ["Santo Espírito, és bem-vindo aqui"],
+                ["Vem inundar, encher esse lugar"],
+                ["É o desejo do meu coração"],
+                ["Sermos inundados por Tua glória, Senhor"]
+            ], 
+            "3": [
+                ["Vamos provar quão real é Tua presença"],
+                ["Vamos provar a Tua glória e bondade"]
+            ]
+        }
+    },
+    "6": {
+        "organization": ["0", "1", "0", "1", "1"],
+        "data": {
+            "0": [
+                ["Ele é exaltado, o Rei é exaltado nos céus"],
+                ["Eu o louvarei"],
+                ["Ele é exaltado, pra sempre exaltado"],
+                ["Seu nome louvarei"]
+            ],
+            "1": [
+                ["Ele é o Senhor, Sua verdade vai sempre reinar"],
+                ["Terra e céus glorificam Seu santo nome"],
+                ["Ele é exaltado, o Rei é exaltado nos céus"]
+            ]
+        }
+    },
+    "7": {
+        "organization": ["0", "1", "2", "0", "1", "2", "3", "3", "3", "3", "3", "2", "2"],
+        "data": {
+            "0": [
+                ["Há um rio cujas águas são limpas"],
+                ["Há um rio cujas fontes não cessam"],
+                ["Há um rio que corre do trono de Deus"]
+            ],
+            "1": [
+                ["Há um rio que desceu de Sua glória"],
+                ["Há um rio que morreu numa cruz"],
+                ["Mas esse rio ao terceiro dia ressuscitou"]
+            ],
+            "2": [
+                ["Eu vou mergulhar nos Teus rios"],
+                ["Eu vou mergulhar nas Tuas fontes"],
+                ["Eu vou!"],
+                ["Eu vou mergulhar nos Teus rios"],
+                ["Eu vou mergulhar nas Tuas fontes"]
+            ],
+            "3": [
+                ["Me limpa, me sara, me cura"],
+                ["Transforma, restaura o meu coração"],
+                ["Me limpa, me sara, me cura"],
+                ["Transforma, restaura o meu coração"]
+            ]
+        }
     }
 }
