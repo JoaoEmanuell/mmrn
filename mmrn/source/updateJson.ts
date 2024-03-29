@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { RNFS, DOCUMENT_DIRECTORY } from './RNFS'
+import { Restart } from 'fiction-expo-restart'
 
 const onlineRepositoryUrl =
     'https://raw.githubusercontent.com/JoaoEmanuell/mmrn/master'
@@ -90,24 +91,37 @@ const updateJson = async () => {
     }
 }
 
-const getFirstOnlineVersion = async () => {
-    axiosConfig.get(`/mmrn/assets/json/version.js`).then((response) => {
-        if (response.status === 200) {
-            const onlineVersion = response.data as String
-            try {
-                // update version.js file
-                RNFS.writeAsStringAsync(
-                    `${DOCUMENT_DIRECTORY}version.js`,
-                    onlineVersion.trim()
-                ).then((data) => {
-                    console.log('version.js written successfully')
-                })
-                updateJson() // update the jsons
-                // file written successfully
-            } catch (err) {
-                console.error(`Error to get write the version js ${err}`)
-            }
-        }
+const getFirstAssetVersion = async () => {
+    /* Move the saved files in assets do DOCUMENT DIRECTORY */
+
+    // version.js
+
+    const versionJs = require('../assets/json/version')
+    RNFS.writeAsStringAsync(
+        `${DOCUMENT_DIRECTORY}version.js`,
+        `export const version = '${versionJs['version']}'`
+    ).then((data) => {
+        console.log('version.js written successfully')
+    })
+
+    // data.json
+
+    const dataJson = require('../assets/json/data.json')
+    RNFS.writeAsStringAsync(
+        `${DOCUMENT_DIRECTORY}data.json`,
+        JSON.stringify(dataJson)
+    ).then((data) => {
+        console.log('data.json written successfully')
+    })
+
+    // praises.json
+
+    const praisesJson = require('../assets/json/praises.json')
+    RNFS.writeAsStringAsync(
+        `${DOCUMENT_DIRECTORY}praises.json`,
+        JSON.stringify(praisesJson)
+    ).then((data) => {
+        console.log('praises.json written successfully')
     })
 }
 
@@ -119,15 +133,32 @@ export const startUpdateJson = async () => {
             !data.includes('data.json')
         ) {
             alert(
-                'Para a primeira execução do aplicativo é necessário você possui acesso a internet!\nCaso contrário não irá aparecer nenhum louvor!'
+                'Para a primeira execução do aplicativo é necessário você possui acesso a internet!\nCaso contrário não irá aparecer nenhum louvor!\nO aplicativo será reiniciado após concluir esse primeiro download, caso não seja, ele irá fechar ao você clicar em "Selecione o louvor".'
             )
-            await getFirstOnlineVersion().then((data) => {
-                console.log('Get the firs version with success!')
+            await getFirstAssetVersion()
+            await getOnlineVersion().then((data) => {
+                console.log('Get online with success!')
             })
+            Restart()
         } else {
             await getOnlineVersion().then((data) => {
                 console.log('Get online with success!')
             })
         }
     })
+}
+
+const clearData = async () => {
+    // simulate a first execution
+    // not used in production!
+    try {
+        await RNFS.deleteAsync(`${DOCUMENT_DIRECTORY}version.js`)
+    } catch (err) {}
+    try {
+        await RNFS.deleteAsync(`${DOCUMENT_DIRECTORY}data.json`)
+    } catch (err) {}
+    try {
+        await RNFS.deleteAsync(`${DOCUMENT_DIRECTORY}praises.json`)
+    } catch (err) {}
+    console.log(`Data clear`)
 }
