@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { RNFS, DOCUMENT_DIRECTORY } from './RNFS'
-import { Restart } from 'fiction-expo-restart'
 
 const onlineRepositoryUrl =
     'https://raw.githubusercontent.com/JoaoEmanuell/mmrn/master'
@@ -133,13 +132,12 @@ export const startUpdateJson = async () => {
             !data.includes('data.json')
         ) {
             alert(
-                'Para a primeira execução do aplicativo é necessário você possui acesso a internet!\nCaso contrário não irá aparecer nenhum louvor!\nO aplicativo será reiniciado após concluir esse primeiro download, caso não seja, ele irá fechar ao você clicar em "Selecione o louvor".'
+                'Para a primeira execução do aplicativo é necessário você possui acesso a internet!\nCaso contrário não irá aparecer nenhum louvor!\nO aplicativo deve ser reiniciado após concluir esse primeiro download, caso não seja, ele irá fechar ao você clicar em "Selecione o louvor"!'
             )
             await getFirstAssetVersion()
             await getOnlineVersion().then((data) => {
                 console.log('Get online with success!')
             })
-            Restart()
         } else {
             await getOnlineVersion().then((data) => {
                 console.log('Get online with success!')
