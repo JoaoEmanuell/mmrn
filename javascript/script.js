@@ -15,9 +15,11 @@ const previewContainer = document.getElementById("previewContainer")
 const addSessionButtonDiv = document.getElementById("addSessionButtonDiv")
 
 // buttons
-var addSessionButton = document.getElementById("addSession")
+const addSessionButton = document.getElementById("addSession")
 const exportButton = document.getElementById("exportButton")
-const cloneAddSessionButton = addSessionButton.cloneNode(true)
+
+// inputs
+const organizationInput = document.getElementById("organizationInput")
 
 // functions
 
@@ -136,8 +138,49 @@ const deleteSession = (sessionId) => {
     const id = Number(sessionId.split('-')[2])
     delete content["data"][id.toString()]
     setContentInEditSession()
+    if (Object.keys(content["data"]).length === 0){ // reset the count if all deleted all sessions
+        sessionCount = 0
+    }
+}
+
+const showInThePreview = () => {
+    previewDiv.innerHTML = "" // reset the preview div
+    content["organization"] = [] // reset the organization
+    const organizationInputValue = organizationInput.value
+    const sessions = organizationInputValue.split(',')
+    sessions.forEach(session => {
+        const treadedSession = session.trim()
+        if (!content["data"].hasOwnProperty(treadedSession)) { // validate sessions
+            window.alert(`Sessão: ${treadedSession} não é válida`)
+            return;
+        }
+        // show in the preview
+        const paragraph = document.createElement('p')
+        paragraph.classList.add("mt-4")
+        let text = "";
+        content["data"][treadedSession].forEach(subArray => {
+            text += subArray[0] + "<br>";
+        });
+        paragraph.innerHTML = text
+        previewDiv.appendChild(paragraph)
+        // add to content
+        content["organization"].push(treadedSession)
+    });
+    previewContainer.classList.remove("visually-hidden") // show the div
+}
+
+const exportPraise = async () => {
+    const contentJson = JSON.stringify(content)
+    try {
+        await navigator.clipboard.writeText(contentJson);
+        alert('Louvor copiado para a área de transferência!');
+    } catch (err) {
+        console.error('Failed to copy: ', err);
+    }
 }
 
 // init code
 addSessionButton.addEventListener("click", addSession)
+exportButton.addEventListener("click", exportPraise)
+organizationInput.addEventListener("change", showInThePreview)
 previewContainer.classList.add("visually-hidden")
