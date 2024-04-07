@@ -4,8 +4,7 @@ import { StatusBar } from 'expo-status-bar'
 import { readPraisesJson } from '../source/readPraisesJson'
 import { getRandomElementKey } from '../source/getRandomElementKey'
 import { useState, useEffect } from 'react'
-import { DarkButton } from '../components/darkMode/DarkButton'
-import { getColors } from '../source/darkMode/colors'
+import { getColors, getDefaultColors } from '../source/darkMode/colors'
 import { getUserModePreference } from '../source/darkMode/userPreference'
 
 export function PraiseScreen({ navigation, route }) {
@@ -15,11 +14,12 @@ export function PraiseScreen({ navigation, route }) {
 
     // colors
 
-    const colors = getColors()
+    const colors = getDefaultColors()
 
     const [scrollViewColors, setScrollViewColors] = useState(
         colors['containerLight']
     )
+    const [titleColors, setTitleColors] = useState(colors['titleLight'])
     const [textColors, setTextColors] = useState(colors['textLight'])
 
     const [statusBarStyle, setStatusBarStyle] = useState<'light' | 'dark'>(
@@ -28,9 +28,11 @@ export function PraiseScreen({ navigation, route }) {
 
     const setColorMode = async () => {
         const userPreference = await getUserModePreference('dark')
+        const colors = await getColors()
         if (userPreference) {
             setScrollViewColors(colors['containerDark'])
             setTextColors(colors['textDark'])
+            setTitleColors(colors['titleDark'])
             setStatusBarStyle('light')
             navigation.setOptions({
                 headerStyle: colors['containerDark'],
@@ -39,6 +41,7 @@ export function PraiseScreen({ navigation, route }) {
         } else {
             setScrollViewColors(colors['containerLight'])
             setTextColors(colors['textLight'])
+            setTitleColors(colors['titleLight'])
             setStatusBarStyle('dark')
             navigation.setOptions({
                 headerStyle: colors['containerLight'],
@@ -49,9 +52,6 @@ export function PraiseScreen({ navigation, route }) {
 
     useEffect(() => {
         setColorMode()
-        navigation.setOptions({
-            headerRight: () => <DarkButton onPress={setColorMode} />,
-        })
         readPraisesJson().then((data) => {
             const praiseJsonParse = JSON.parse(data as unknown as string)
             const praiseNumber = String(route.params.praiseNumber)
@@ -73,8 +73,8 @@ export function PraiseScreen({ navigation, route }) {
             style={scrollViewColors}
         >
             <Text
-                className="font-title text-2xl font-bold mb-4 text-center"
-                style={textColors}
+                className="font-title font-bold mb-4 text-center"
+                style={titleColors}
             >
                 {route.params.praiseTitle.split(' - ')[1]}
             </Text>

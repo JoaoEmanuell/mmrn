@@ -7,10 +7,12 @@ import { HomeScreen } from './screens/HomeScreen'
 import { PraiseScreen } from './screens/PraiseScreen'
 
 import { startUpdateJson } from './source/updateJson'
+import { ConfigurationScreen } from './screens/ConfigurationScreen'
 
 const Stack = createNativeStackNavigator()
 
 export default function App() {
+    /*
     useEffect(() => {
         try {
             startUpdateJson().then((value) => {
@@ -20,6 +22,7 @@ export default function App() {
             console.log(err)
         }
     }, [])
+    */
 
     return (
         <NavigationContainer>
@@ -35,6 +38,16 @@ export default function App() {
                     name="PraiseScreen"
                     component={PraiseScreen}
                     options={{ title: 'Louvor' }}
+                />
+                <Stack.Screen
+                    name="ConfigurationScreen"
+                    component={ConfigurationScreen}
+                    options={{
+                        title: 'Configurações',
+                        headerTitleStyle: {
+                            fontSize: 20,
+                        },
+                    }}
                 />
             </Stack.Navigator>
         </NavigationContainer>

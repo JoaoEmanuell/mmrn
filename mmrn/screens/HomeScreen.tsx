@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react'
-import { Text, ScrollView } from 'react-native'
+import { Text, ScrollView, TouchableOpacity, Image } from 'react-native'
 import { DropdownMenuList } from '../components/form/DropdownMenuList'
 
 import { readDataJson } from '../source/readDataJson'
 import { orderPraises } from '../source/orderPraises'
 
-import { getColors } from '../source/darkMode/colors'
+import { getColors, getDefaultColors } from '../source/darkMode/colors'
 import { getUserModePreference } from '../source/darkMode/userPreference'
-import { DarkButton } from '../components/darkMode/DarkButton'
 import { useIsFocused } from '@react-navigation/native'
 import { StatusBar } from 'expo-status-bar'
+
+import Settings from '../assets/icons/settings.png'
 
 export function HomeScreen({ navigation }) {
     // json
@@ -26,15 +27,17 @@ export function HomeScreen({ navigation }) {
 
     // Colors
 
-    const colors = getColors()
+    const colors = getDefaultColors()
 
     const [scrollViewColors, setScrollViewColors] = useState(
         colors['containerLight']
     )
+    const [titleColors, setTitleColors] = useState(colors['titleLight'])
     const [textColors, setTextColors] = useState(colors['textLight'])
     const [dropDownStyle, setDropdownStyle] = useState(
         colors['dropdownMenuDark']
     )
+
     const [statusBarStyle, setStatusBarStyle] = useState<'light' | 'dark'>(
         'dark'
     )
@@ -43,10 +46,14 @@ export function HomeScreen({ navigation }) {
 
     const setColorMode = async () => {
         const userPreference = await getUserModePreference('dark')
+        console.log(`User preference: ${userPreference}`)
         if (userPreference) {
             // dark mode
+            const colors = await getColors()
+            console.log(colors)
             setScrollViewColors(colors['containerDark'])
             setTextColors(colors['textDark'])
+            setTitleColors(colors['titleDark'])
             setDropdownStyle(colors['dropdownMenuDark'])
             setStatusBarStyle('light')
             navigation.setOptions({
@@ -54,8 +61,11 @@ export function HomeScreen({ navigation }) {
             })
         } else {
             // light mode
+            const colors = await getColors()
+            console.log(colors)
             setScrollViewColors(colors['containerLight'])
             setTextColors(colors['textLight'])
+            setTitleColors(colors['titleLight'])
             setDropdownStyle(colors['dropdownMenuLight'])
             setStatusBarStyle('dark')
             navigation.setOptions({
@@ -64,13 +74,28 @@ export function HomeScreen({ navigation }) {
         }
     }
 
+    const setConfigurationInNavigation = () => {
+        navigation.setOptions({
+            headerRight: () => (
+                <TouchableOpacity
+                    onPress={() => {
+                        navigation.navigate('ConfigurationScreen')
+                    }}
+                    className="pr-2"
+                >
+                    <Image source={Settings} className="w-6 h-6" />
+                </TouchableOpacity>
+            ),
+        })
+    }
+
     useEffect(() => {
         if (isFocused) {
-            setColorMode()
+            setColorMode().then(() => {
+                setConfigurationInNavigation()
+            })
         }
-        navigation.setOptions({
-            headerRight: () => <DarkButton onPress={setColorMode} />,
-        })
+
         readDataJson().then((data) => {
             setDataJson(JSON.parse(data as unknown as string))
             // setDataJson(data)
@@ -108,8 +133,8 @@ export function HomeScreen({ navigation }) {
             style={scrollViewColors}
         >
             <Text
-                className="font-title text-2xl font-bold mb-2 text-center"
-                style={textColors}
+                className="font-title font-bold mb-2 text-center"
+                style={titleColors}
             >
                 Louvores mandacaru
             </Text>
