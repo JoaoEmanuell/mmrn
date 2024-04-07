@@ -46,11 +46,9 @@ export function HomeScreen({ navigation }) {
 
     const setColorMode = async () => {
         const userPreference = await getUserModePreference('dark')
-        console.log(`User preference: ${userPreference}`)
         if (userPreference) {
             // dark mode
             const colors = await getColors()
-            console.log(colors)
             setScrollViewColors(colors['containerDark'])
             setTextColors(colors['textDark'])
             setTitleColors(colors['titleDark'])
@@ -62,7 +60,6 @@ export function HomeScreen({ navigation }) {
         } else {
             // light mode
             const colors = await getColors()
-            console.log(colors)
             setScrollViewColors(colors['containerLight'])
             setTextColors(colors['textLight'])
             setTitleColors(colors['titleLight'])
@@ -97,11 +94,17 @@ export function HomeScreen({ navigation }) {
         }
 
         readDataJson().then((data) => {
-            setDataJson(JSON.parse(data as unknown as string))
-            // setDataJson(data)
-            setPraisesData(
-                orderPraises(JSON.parse(data as unknown as string)['praises'])
-            )
+            if (typeof data === 'object') {
+                setDataJson(data)
+                setPraisesData(orderPraises(data['praises']))
+            } else {
+                setDataJson(JSON.parse(data as unknown as string))
+                setPraisesData(
+                    orderPraises(
+                        JSON.parse(data as unknown as string)['praises']
+                    )
+                )
+            }
         })
     }, [navigation, isFocused])
 

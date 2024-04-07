@@ -12,7 +12,6 @@ import { ConfigurationScreen } from './screens/ConfigurationScreen'
 const Stack = createNativeStackNavigator()
 
 export default function App() {
-    /*
     useEffect(() => {
         try {
             startUpdateJson().then((value) => {
@@ -22,7 +21,6 @@ export default function App() {
             console.log(err)
         }
     }, [])
-    */
 
     return (
         <NavigationContainer>

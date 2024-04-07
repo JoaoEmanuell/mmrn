@@ -1,4 +1,4 @@
-import { RNFS, DOCUMENT_DIRECTORY } from "./RNFS"
+import { RNFS, DOCUMENT_DIRECTORY } from './RNFS'
 
 interface praisesJson {
     praiseId: {
@@ -9,9 +9,17 @@ interface praisesJson {
     }
 }
 
-export function readPraisesJson(): Promise<string | praisesJson> {
+export async function readPraisesJson(): Promise<string | praisesJson> {
     try {
-        return RNFS.readAsStringAsync(`${DOCUMENT_DIRECTORY}praises.json`)
+        const documentDirList =
+            await RNFS.readDirectoryAsync(DOCUMENT_DIRECTORY)
+        if (!documentDirList.includes('praises.json')) {
+            // praises.json not in document dir
+            const praisesJson = require('../assets/json/praises.json')
+            return praisesJson
+        } else {
+            return RNFS.readAsStringAsync(`${DOCUMENT_DIRECTORY}praises.json`)
+        }
     } catch (error) {
         console.error('Erro ao ler o arquivo JSON:', error)
         throw error

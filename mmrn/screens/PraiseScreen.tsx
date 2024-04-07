@@ -53,9 +53,14 @@ export function PraiseScreen({ navigation, route }) {
     useEffect(() => {
         setColorMode()
         readPraisesJson().then((data) => {
-            const praiseJsonParse = JSON.parse(data as unknown as string)
-            const praiseNumber = String(route.params.praiseNumber)
-            setPraise(praiseJsonParse[praiseNumber])
+            if (typeof data === 'object') {
+                const praiseNumber = String(route.params.praiseNumber)
+                setPraise(data[praiseNumber])
+            } else {
+                const praiseJsonParse = JSON.parse(data as unknown as string)
+                const praiseNumber = String(route.params.praiseNumber)
+                setPraise(praiseJsonParse[praiseNumber])
+            }
         })
     }, [navigation])
 
