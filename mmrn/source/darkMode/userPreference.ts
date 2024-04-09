@@ -13,3 +13,8 @@ export const getUserModePreference = async (name) => {
         return false
     }
 }
+
+export const getUserPreference = async (name: 'fontSize') => {
+    const value = await AsyncStorage.getItem(name)
+    return value
+}

@@ -131,9 +131,6 @@ export const startUpdateJson = async () => {
             !data.includes('praises.json') ||
             !data.includes('data.json')
         ) {
-            alert(
-                'Para a primeira execução do aplicativo é necessário você possui acesso a internet!\nCaso contrário não irá aparecer nenhum louvor!\nO aplicativo deve ser reiniciado após concluir esse primeiro download, caso não seja, ele irá fechar ao você clicar em "Selecione o louvor"!'
-            )
             await getFirstAssetVersion()
             await getOnlineVersion().then((data) => {
                 console.log('Get online with success!')
