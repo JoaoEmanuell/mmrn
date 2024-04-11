@@ -29,6 +29,8 @@ export function Dropdown(props: DropdownProps) {
     const [initialDropdownItemsString, setInitialDropdownItemsString] =
         useState<string | null>()
     const [firstOpenMenu, setFirstOpenMenu] = useState(true)
+    const [closeDiv, setCloseDiv] = useState<JSX.Element | null>()
+    const [elementsZIndex, setElementsZIndex] = useState('z-0')
 
     const onChangeInput = () => {
         // search the itens
@@ -48,11 +50,19 @@ export function Dropdown(props: DropdownProps) {
         // enable menu
         setIsOpen(true)
         getFloatMenu()
+        setCloseDiv(
+            <div
+                className="inset-0 z-10 w-[100%] absolute"
+                onClick={closeMenu}
+            ></div>
+        )
+        setElementsZIndex('z-20 relative')
     }
 
     const getFloatMenu = () => {
         // render the float menu
-        const mainUlClassName = 'border border-gray-400 rounded-lg mt-2 mb-4'
+        const mainUlClassName = `border border-gray-400 rounded-lg mt-2 mb-4 p-2 ${elementsZIndex}`
+        const liClassName = `transition duration-700 ease-in-out hover:duration-150 hover:scale-110 p-2 ${elementsZIndex}`
 
         const getMenuWithCustomMapVar = (customMapVar: any[]) => {
             // use a custom map var to avoid repeat code
@@ -68,7 +78,7 @@ export function Dropdown(props: DropdownProps) {
                                     props.onSelect(value.toString())
                                     setIsOpen(false)
                                 }}
-                                className="p-2"
+                                className={liClassName}
                             >
                                 {name}
                             </li>
@@ -97,7 +107,7 @@ export function Dropdown(props: DropdownProps) {
                 resetElements()
                 setFloatMenu(
                     <ul className={mainUlClassName}>
-                        <li className="p-2">Louvor não encontrado</li>
+                        <li className={liClassName}>Louvor não encontrado</li>
                     </ul>
                 )
             }
@@ -129,6 +139,8 @@ export function Dropdown(props: DropdownProps) {
         resetElements()
         inputRef.current!.value = ''
         setFirstOpenMenu(true)
+        setElementsZIndex('z-0') // reset zIndex
+        setCloseDiv(<div></div>) // reset close div
     }
 
     const resetElements = () => {
@@ -146,27 +158,33 @@ export function Dropdown(props: DropdownProps) {
 
     return (
         <div>
-            <label htmlFor="dropdown" {...props.labelProps}>
-                {props.labelText}
-            </label>
-            <br />
-            <div className="flex p-2 text-black bg-white border border-gray-500 rounded-lg justify-between">
-                <input
-                    type="text"
-                    name="dropdown"
-                    id="dropdown"
-                    ref={inputRef}
-                    onSelect={toggleMenu}
-                    onChange={() => {
-                        resetElements(), onChangeInput()
-                    }}
-                    onFocus={onFocus}
-                    onKeyDown={onKeyDown}
-                    className="outline-none"
-                />
-                <CircleX onClick={closeMenu} color="#000" />
+            {closeDiv}
+            <div className={elementsZIndex}>
+                <label htmlFor="dropdown" {...props.labelProps}>
+                    {props.labelText}
+                </label>
+                <br />
+                <div
+                    className={`flex p-2 text-black bg-white border border-gray-500 rounded-lg justify-between ${elementsZIndex}`}
+                >
+                    <input
+                        type="text"
+                        name="dropdown"
+                        id="dropdown"
+                        ref={inputRef}
+                        onSelect={toggleMenu}
+                        onChange={() => {
+                            resetElements(), onChangeInput()
+                        }}
+                        onFocus={onFocus}
+                        onKeyDown={onKeyDown}
+                        className="outline-none"
+                        autoComplete="off"
+                    />
+                    <CircleX onClick={closeMenu} color="#000" />
+                </div>
+                {isOpen && floatMenu}
             </div>
-            {isOpen && floatMenu}
         </div>
     )
 }
