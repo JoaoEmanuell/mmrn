@@ -29,10 +29,10 @@ export default function DownloadPage() {
                 } else {
                     setReleaseDiv(
                         <div className="shadow-lg p-4 rounded-md bg-gray-100">
-                            <pre className="text-gray-800">{data.body}</pre>
+                            <div className="text-gray-800">{data.body}</div>
                             <a
                                 href={data.assets[0].browser_download_url}
-                                className="underline"
+                                className="underline text-gray-800"
                             >
                                 Clique aqui para baixar a nova versão!
                             </a>
