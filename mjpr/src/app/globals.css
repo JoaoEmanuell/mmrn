@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+--clr-bg-dark: #1f2937; /* gray-800 */
+--clr-bg-light: #fafafa; /* zinc-50 */
+}
+
+.dark {
+    background-color: var(--clr-bg-dark);
+}
+
+.light {
+    background-color: var(--clr-bg-light);
+}
