@@ -62,4 +62,3 @@ export default function DownloadPage() {
         </main>
     )
 }
-// <script src="/js/download.js" defer></script>

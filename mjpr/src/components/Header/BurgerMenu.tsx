@@ -106,6 +106,14 @@ export function BurgerMenu() {
                                     Sobre
                                 </a>
                             </li>
+                            <li className="mb-1">
+                                <a
+                                    className="block p-4 text-sm font-semibold text-gray-400 hover:bg-blue-50 rounded"
+                                    href="/download"
+                                >
+                                    Download do aplicativo Android
+                                </a>
+                            </li>
                             <li className="mb-1" onClick={changeTheme}>
                                 <div className="block p-4 text-sm font-semibold text-gray-400 hover:bg-blue-50 rounded">
                                     <div className="inline-flex items-center cursor-pointer">
