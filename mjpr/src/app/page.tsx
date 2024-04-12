@@ -1,36 +1,33 @@
 'use client'
 
 import { Dropdown } from '@/components/Dropdown'
-
-const exampleDropdownItems = {
-    praises: {
-        '1 - Em teu nome': 0,
-        '2 - Minha alma engrandece': 1,
-        '3 - Alto Preço / Alfa e Ômega': 2,
-        '4 - Jesus Em Tua Presença': 3,
-        '5 - A Ele a Glória': 4,
-        '6 - Santo Espírito': 5,
-        '7 - Ele é Exaltado': 6,
-        '8 - Há Um Rio': 7,
-        '9 - Isaías 9': 8,
-        '10 - Isaías 53': 9,
-        '11 - Leão de Judá': 10,
-        '12 - Nosso Deus é Soberano': 11,
-        '13 - Grande é o Senhor': 12,
-        '14 - Digno é o Cordeiro': 13,
-        '15 - Jesus, o Plano Perfeito': 14,
-        "16 - Aquieta Minh'alma": 15,
-        '17 - O Plano': 16,
-        '18 - Vim Para Adorar-te': 17,
-        '19 - Nome sobre todo nome': 18,
-    },
-}
+import { useEffect, useState } from 'react'
 
 export default function Home() {
+    const [dropdownItems, setDropdownItens] = useState({ '': 0 }) //default
+
     const onSelectDropdown = (selectedValue: string) => {
         const origin = new URL(window.location.href).origin
         window.location.href = `${origin}/praise/${selectedValue}`
     }
+
+    useEffect(() => {
+        const origin = new URL(window.location.href).origin
+        const data = `${origin}/json/data.min.json`
+        fetch(data, {
+            method: 'GET',
+            mode: 'cors',
+            cache: 'force-cache',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                const praises = data['praises'] // get the praises
+                setDropdownItens(praises)
+            })
+    }, [])
 
     return (
         <main>
@@ -46,7 +43,7 @@ export default function Home() {
             </div>
             <div className="container mt-4 flex justify-center">
                 <Dropdown
-                    dropdownItems={exampleDropdownItems['praises']}
+                    dropdownItems={dropdownItems}
                     onSelect={onSelectDropdown}
                     labelText="Louvores: "
                 />
