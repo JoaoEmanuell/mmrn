@@ -1,8 +1,6 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Header } from '@/components/Header/Header'
 import './globals.css'
-
-const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
     title: 'Louvores João Pessoa',
@@ -16,7 +14,13 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="pt-br">
-            <body className={inter.className}>{children}</body>
+            <body className="transition-all duration-500">
+                <noscript>Enable Javascript to use this site!</noscript>
+                <Header />
+                <div className="flex justify-center mt-4 px-4 mb-4">
+                    {children}
+                </div>
+            </body>
         </html>
     )
 }

@@ -1,12 +1,7 @@
 'use client'
 
 import { Dropdown } from '@/components/Dropdown'
-import { Roboto } from 'next/font/google'
-
-const roboto = Roboto({
-    weight: '300',
-    subsets: ['latin'],
-})
+import { roboto } from '@/config/roboto'
 
 const exampleDropdownItems = {
     praises: {
@@ -34,7 +29,8 @@ const exampleDropdownItems = {
 
 export default function Home() {
     const onSelectDropdown = (selectedValue: string) => {
-        console.log(`Selected: ${selectedValue}`)
+        const origin = new URL(window.location.href).origin
+        window.location.href = `${origin}/praise/${selectedValue}`
     }
 
     return (

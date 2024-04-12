@@ -118,11 +118,9 @@ export function Dropdown(props: DropdownProps) {
 
     const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         // reset elements or close menu
-        if (event.key === 'Backspace' || event.key === 'Delete') {
-            resetElements()
-        } else if (event.key === 'Escape') {
-            setIsOpen(false)
-            resetElements()
+        resetElements()
+        if (event.key === 'Escape') {
+            closeMenu()
         }
     }
 
@@ -180,6 +178,7 @@ export function Dropdown(props: DropdownProps) {
                         onKeyDown={onKeyDown}
                         className="outline-none"
                         autoComplete="off"
+                        placeholder="Digite o nome do louvor"
                     />
                     <CircleX onClick={closeMenu} color="#000" />
                 </div>
