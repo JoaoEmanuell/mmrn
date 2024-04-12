@@ -31,6 +31,7 @@ export function Dropdown(props: DropdownProps) {
     const [firstOpenMenu, setFirstOpenMenu] = useState(true)
     const [closeDiv, setCloseDiv] = useState<JSX.Element | null>()
     const [elementsZIndex, setElementsZIndex] = useState('z-0')
+    const [visibleCloseDropdown, setVisibleCloseDropdown] = useState('hidden')
 
     const onChangeInput = () => {
         // search the itens
@@ -62,7 +63,7 @@ export function Dropdown(props: DropdownProps) {
     const getFloatMenu = () => {
         // render the float menu
         const mainUlClassName = `border border-gray-400 rounded-lg mt-2 mb-4 p-2 ${elementsZIndex}`
-        const liClassName = `transition duration-700 ease-in-out hover:duration-150 hover:scale-110 p-2 ${elementsZIndex}`
+        const liClassName = `transition duration-700 ease-in-out hover:duration-150 hover:scale-110 p-2 cursor-pointer ${elementsZIndex}`
 
         const getMenuWithCustomMapVar = (customMapVar: any[]) => {
             // use a custom map var to avoid repeat code
@@ -128,6 +129,7 @@ export function Dropdown(props: DropdownProps) {
         // open menu if is closed
         if (!isOpen) {
             setIsOpen(true)
+            setVisibleCloseDropdown('cursor-pointer')
         }
     }
 
@@ -139,6 +141,7 @@ export function Dropdown(props: DropdownProps) {
         setFirstOpenMenu(true)
         setElementsZIndex('z-0') // reset zIndex
         setCloseDiv(<div></div>) // reset close div
+        setVisibleCloseDropdown('hidden') // hidden the close button
     }
 
     const resetElements = () => {
@@ -180,7 +183,11 @@ export function Dropdown(props: DropdownProps) {
                         autoComplete="off"
                         placeholder="Digite o nome do louvor"
                     />
-                    <CircleX onClick={closeMenu} color="#000" />
+                    <CircleX
+                        onClick={closeMenu}
+                        color="#000"
+                        className={visibleCloseDropdown}
+                    />
                 </div>
                 {isOpen && floatMenu}
             </div>

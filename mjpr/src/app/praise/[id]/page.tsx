@@ -75,7 +75,7 @@ export default function PraisePage() {
                         const data = json['data'][organizationValue]
                         return (
                             <div
-                                className="mt-4 px-2"
+                                className="mt-4 px-2 space-y-1"
                                 key={getRandomElementKey()}
                             >
                                 {data.map((paragraph) => {
