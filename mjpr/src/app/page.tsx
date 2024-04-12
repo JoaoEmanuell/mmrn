@@ -1,7 +1,6 @@
 'use client'
 
 import { Dropdown } from '@/components/Dropdown'
-import { roboto } from '@/config/roboto'
 
 const exampleDropdownItems = {
     praises: {
@@ -34,7 +33,7 @@ export default function Home() {
     }
 
     return (
-        <main className={roboto.className}>
+        <main>
             <div className="container mt-4">
                 <h1 className="text-center text-2xl font-title">
                     Louvores igreja de João Pessoa

@@ -1,6 +1,5 @@
 'use client'
 
-import { roboto } from '@/config/roboto'
 import { getRandomElementKey } from '@/lib/randomElementKey'
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -63,7 +62,7 @@ export default function PraisePage() {
     }, [])
 
     return (
-        <main className={`${roboto.className} mb-4`}>
+        <main className={`mb-4`}>
             <div className="container mt-4">
                 <h1 className="text-center font-bold text-2xl">
                     {praiseTitle}
