@@ -63,7 +63,7 @@ export function Dropdown(props: DropdownProps) {
     const getFloatMenu = () => {
         // render the float menu
         const mainUlClassName = `border border-gray-400 rounded-lg mt-2 mb-4 p-2 ${elementsZIndex}`
-        const liClassName = `transition duration-700 ease-in-out hover:duration-150 hover:scale-110 p-2 cursor-pointer ${elementsZIndex}`
+        const liClassName = `transition duration-700 ease-in-out hover:duration-150 hover:scale-110 ml-2 p-2 cursor-pointer ${elementsZIndex}`
 
         const getMenuWithCustomMapVar = (customMapVar: any[]) => {
             // use a custom map var to avoid repeat code
