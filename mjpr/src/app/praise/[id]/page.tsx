@@ -78,11 +78,17 @@ export default function PraisePage() {
                                 key={getRandomElementKey()}
                             >
                                 {data.map((paragraph) => {
-                                    return (
-                                        <p key={getRandomElementKey()}>
-                                            {paragraph}
-                                        </p>
-                                    )
+                                    if (paragraph.toString() === '') {
+                                        return (
+                                            <br key={getRandomElementKey()} />
+                                        )
+                                    } else {
+                                        return (
+                                            <p key={getRandomElementKey()}>
+                                                {paragraph}
+                                            </p>
+                                        )
+                                    }
                                 })}
                             </div>
                         )
