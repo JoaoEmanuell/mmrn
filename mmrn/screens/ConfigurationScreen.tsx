@@ -64,7 +64,7 @@ export function ConfigurationScreen({ navigation }) {
                     onPress={() => {
                         navigation.navigate('Home')
                     }}
-                    className="text-sm pr-12"
+                    className="text-sm pr-12 text-black"
                 >
                     Salvar
                 </Text>
@@ -85,7 +85,9 @@ export function ConfigurationScreen({ navigation }) {
     return (
         <ScrollView>
             <View className="mt-4 px-2">
-                <Text className="text-base mt-4 mb-6">Modo escuro</Text>
+                <Text className="text-base mt-4 mb-6 text-black">
+                    Modo escuro
+                </Text>
                 <View className="px-2">
                     <Switch
                         value={switchIsEnabled}
@@ -100,26 +102,40 @@ export function ConfigurationScreen({ navigation }) {
                 </View>
             </View>
             <View className="mt-4 px-2">
-                <Text className="text-base mt-4">Tamanho do texto: </Text>
+                <Text className="text-base mt-4 text-black">
+                    Tamanho do texto:{' '}
+                </Text>
                 <View className="mt-4 flex flex-row justify-between px-[90]">
                     <ButtonBlue buttonText="-" onPress={lessButtonPress} />
                     <View className="mt-4 py-2 px-4">
-                        <Text className="font-bold">{quantity}</Text>
+                        <Text className="font-bold text-black">{quantity}</Text>
                     </View>
                     <ButtonBlue buttonText="+" onPress={moreButtonPress} />
                 </View>
             </View>
             <View className="mt-4 px-2">
-                <Text className="text-center" style={textSize.textExampleSize}>
+                <Text
+                    className="text-center text-black"
+                    style={textSize.textExampleSize}
+                >
                     Jesus, em Tua presença reunimo-nos aqui
                 </Text>
-                <Text className="text-center" style={textSize.textExampleSize}>
+                <Text
+                    className="text-center text-black"
+                    style={textSize.textExampleSize}
+                >
                     Contemplamos Tua face e rendemo-nos a Ti
                 </Text>
-                <Text className="text-center" style={textSize.textExampleSize}>
+                <Text
+                    className="text-center text-black"
+                    style={textSize.textExampleSize}
+                >
                     Pois um dia Tua morte trouxe vida a todos nós
                 </Text>
-                <Text className="text-center" style={textSize.textExampleSize}>
+                <Text
+                    className="text-center text-black"
+                    style={textSize.textExampleSize}
+                >
                     E nos deu completo acesso ao coração do Pai
                 </Text>
             </View>

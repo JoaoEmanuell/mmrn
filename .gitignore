@@ -131,6 +131,3 @@ dist
 
 tmp.*
 tmp/
-
-android/
-ios/
