@@ -17,7 +17,7 @@ export default function Home() {
         fetch(data, {
             method: 'GET',
             mode: 'cors',
-            cache: 'force-cache',
+            cache: 'default',
             headers: {
                 'Content-Type': 'application/json',
             },
