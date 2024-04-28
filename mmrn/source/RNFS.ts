@@ -1,4 +1,2 @@
-import * as FileSystem from 'expo-file-system'
-
-export const RNFS = FileSystem
-export const DOCUMENT_DIRECTORY = RNFS.documentDirectory
+export const RNFS = require('react-native-fs')
+export const DOCUMENT_DIRECTORY = `${RNFS.DocumentDirectoryPath}/`

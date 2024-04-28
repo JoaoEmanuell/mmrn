@@ -1,5 +1,4 @@
-import { ScrollView, Text, View } from 'react-native'
-import { StatusBar } from 'expo-status-bar'
+import { ScrollView, Text, View, StatusBar } from 'react-native'
 
 import { readPraisesJson } from '../source/readPraisesJson'
 import { getRandomElementKey } from '../source/getRandomElementKey'
@@ -17,10 +16,10 @@ export function PraiseScreen({ navigation, route }) {
     const colors = getDefaultColors()
 
     const [scrollViewColors, setScrollViewColors] = useState(
-        colors['containerLight']
+        colors.containerLight
     )
-    const [titleColors, setTitleColors] = useState(colors['titleLight'])
-    const [textColors, setTextColors] = useState(colors['textLight'])
+    const [titleColors, setTitleColors] = useState(colors.titleLight)
+    const [textColors, setTextColors] = useState(colors.textLight)
 
     const [statusBarStyle, setStatusBarStyle] = useState<'light' | 'dark'>(
         'dark'
@@ -30,21 +29,21 @@ export function PraiseScreen({ navigation, route }) {
         const userPreference = await getUserModePreference('dark')
         const colors = await getColors()
         if (userPreference) {
-            setScrollViewColors(colors['containerDark'])
-            setTextColors(colors['textDark'])
-            setTitleColors(colors['titleDark'])
+            setScrollViewColors(colors.containerDark)
+            setTextColors(colors.textDark)
+            setTitleColors(colors.titleDark)
             setStatusBarStyle('light')
             navigation.setOptions({
-                headerStyle: colors['containerDark'],
+                headerStyle: colors.containerDark,
                 headerTintColor: '#fff',
             })
         } else {
-            setScrollViewColors(colors['containerLight'])
-            setTextColors(colors['textLight'])
-            setTitleColors(colors['titleLight'])
+            setScrollViewColors(colors.containerLight)
+            setTextColors(colors.textLight)
+            setTitleColors(colors.titleLight)
             setStatusBarStyle('dark')
             navigation.setOptions({
-                headerStyle: colors['containerLight'],
+                headerStyle: colors.containerLight,
                 headerTintColor: '#000',
             })
         }

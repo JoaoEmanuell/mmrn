@@ -17,39 +17,40 @@ const axiosConfig = axios.create({
 })
 
 const getOnlineVersion = async () => {
-    RNFS.readAsStringAsync(`${DOCUMENT_DIRECTORY}version.js`).then(
-        (version) => {
-            axiosConfig.get(`/mmrn/assets/json/version.js`).then((response) => {
-                if (response.status === 200) {
-                    const onlineVersion = response.data as String
-                    if (version == undefined) {
-                        version = '65488771' // random numbers
-                    }
-                    if (version.trim() !== onlineVersion.trim()) {
-                        alert(
-                            'Novos louvores foram encontrados! Iniciando o download deles!'
+    RNFS.readFile(`${DOCUMENT_DIRECTORY}version.js`).then((version) => {
+        console.log(version)
+        axiosConfig.get('/mmrn/assets/json/version.js').then((response) => {
+            if (response.status === 200) {
+                const onlineVersion = response.data as String
+                console.log(`Online: ${onlineVersion}`)
+                if (version === undefined) {
+                    version = '65488771' // random numbers
+                }
+                if (version.trim() !== onlineVersion.trim()) {
+                    alert(
+                        'Novos louvores foram encontrados! Iniciando o download deles!'
+                    )
+                    console.log('Update the jsons!')
+                    updateJson() // update the jsons
+                    try {
+                        // update version.js file
+                        RNFS.writeFile(
+                            `${DOCUMENT_DIRECTORY}version.js`,
+                            onlineVersion.trim(),
+                            'utf8'
+                        ).then((data) => {
+                            console.log('version.js written successfully')
+                        })
+                        // file written successfully
+                    } catch (err) {
+                        console.error(
+                            `Error to get write the version js ${err.message}`
                         )
-                        console.log('Update the jsons!')
-                        updateJson() // update the jsons
-                        try {
-                            // update version.js file
-                            RNFS.writeAsStringAsync(
-                                `${DOCUMENT_DIRECTORY}version.js`,
-                                onlineVersion.trim()
-                            ).then((data) => {
-                                console.log('version.js written successfully')
-                            })
-                            // file written successfully
-                        } catch (err) {
-                            console.error(
-                                `Error to get write the version js ${err}`
-                            )
-                        }
                     }
                 }
-            })
-        }
-    )
+            }
+        })
+    })
 }
 
 const updateJson = async () => {
@@ -57,35 +58,37 @@ const updateJson = async () => {
 
     // get the data.json
 
-    const dataResponse = await axiosConfig.get(`/mmrn/assets/json/data.json`)
+    const dataResponse = await axiosConfig.get('/mmrn/assets/json/data.json')
 
     if (dataResponse.status === 200) {
         try {
-            await RNFS.writeAsStringAsync(
+            await RNFS.writeFile(
                 `${DOCUMENT_DIRECTORY}data.json`,
-                JSON.stringify(dataResponse.data)
+                JSON.stringify(dataResponse.data),
+                'utf8'
             )
             console.log('data.json written successfully')
         } catch (err) {
-            console.error(`Error to save data json: ${err}`)
+            console.error(`Error to save data json: ${err.message}`)
         }
     }
 
     // get the praises.json
 
     const praisesResponse = await axiosConfig.get(
-        `/mmrn/assets/json/praises.json`
+        '/mmrn/assets/json/praises.json'
     )
     if (praisesResponse.status === 200) {
         console.log('Praises json download')
         try {
-            await RNFS.writeAsStringAsync(
+            await RNFS.writeFile(
                 `${DOCUMENT_DIRECTORY}praises.json`,
-                JSON.stringify(praisesResponse.data)
+                JSON.stringify(praisesResponse.data),
+                'utf8'
             )
             console.log('praises.json written successfully')
         } catch (err) {
-            console.error(`Error to save praise json: ${err}`)
+            console.error(`Error to save praise json: ${err.message}`)
         }
     }
 }
@@ -95,10 +98,11 @@ const getFirstAssetVersion = async () => {
 
     // version.js
 
-    const versionJs = require('../assets/json/version')
-    RNFS.writeAsStringAsync(
+    const versionJs = require('../assets/json/version.js')
+    RNFS.writeFile(
         `${DOCUMENT_DIRECTORY}version.js`,
-        `export const version = '${versionJs['version']}'`
+        `export const version = '${versionJs.version}'`,
+        'utf8'
     ).then((data) => {
         console.log('version.js written successfully')
     })
@@ -106,9 +110,10 @@ const getFirstAssetVersion = async () => {
     // data.json
 
     const dataJson = require('../assets/json/data.json')
-    RNFS.writeAsStringAsync(
+    RNFS.writeFile(
         `${DOCUMENT_DIRECTORY}data.json`,
-        JSON.stringify(dataJson)
+        `${JSON.stringify(dataJson)}`,
+        'utf8'
     ).then((data) => {
         console.log('data.json written successfully')
     })
@@ -116,16 +121,17 @@ const getFirstAssetVersion = async () => {
     // praises.json
 
     const praisesJson = require('../assets/json/praises.json')
-    RNFS.writeAsStringAsync(
+    RNFS.writeFile(
         `${DOCUMENT_DIRECTORY}praises.json`,
-        JSON.stringify(praisesJson)
+        JSON.stringify(praisesJson),
+        'utf8'
     ).then((data) => {
         console.log('praises.json written successfully')
     })
 }
 
 export const startUpdateJson = async () => {
-    RNFS.readDirectoryAsync(DOCUMENT_DIRECTORY).then(async (data) => {
+    RNFS.readdir(DOCUMENT_DIRECTORY).then(async (data) => {
         if (
             !data.includes('version.js') ||
             !data.includes('praises.json') ||
@@ -147,13 +153,13 @@ const clearData = async () => {
     // simulate a first execution
     // not used in production!
     try {
-        await RNFS.deleteAsync(`${DOCUMENT_DIRECTORY}version.js`)
+        await RNFS.unlink(`${DOCUMENT_DIRECTORY}version.js`)
     } catch (err) {}
     try {
-        await RNFS.deleteAsync(`${DOCUMENT_DIRECTORY}data.json`)
+        await RNFS.unlink(`${DOCUMENT_DIRECTORY}data.json`)
     } catch (err) {}
     try {
-        await RNFS.deleteAsync(`${DOCUMENT_DIRECTORY}praises.json`)
+        await RNFS.unlink(`${DOCUMENT_DIRECTORY}praises.json`)
     } catch (err) {}
-    console.log(`Data clear`)
+    console.log('Data clear')
 }

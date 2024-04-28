@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect } from 'react'
 
 import { NavigationContainer } from '@react-navigation/native'
@@ -6,21 +7,21 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { HomeScreen } from './screens/HomeScreen'
 import { PraiseScreen } from './screens/PraiseScreen'
 
-import { startUpdateJson } from './source/updateJson'
+import { startUpdateJson } from './source/updateJson.ts'
 import { ConfigurationScreen } from './screens/ConfigurationScreen'
 
 const Stack = createNativeStackNavigator()
 
 export default function App() {
-    useEffect(() => {
+    /*useEffect(() => {
         try {
-            startUpdateJson().then((value) => {
+            startUpdateJson().then((param) => {
                 console.log('get success')
             }) // update the praises
         } catch (err) {
-            console.log(err)
+            console.log(`Update error: ${err}`)
         }
-    }, [])
+    }, [])*/
 
     return (
         <NavigationContainer>
