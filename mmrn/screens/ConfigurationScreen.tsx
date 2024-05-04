@@ -9,6 +9,8 @@ import {
 } from '../source/darkMode/userPreference'
 import { useIsFocused } from '@react-navigation/native'
 
+import { colorsSingleton } from '../source/singletonManager'
+
 export function ConfigurationScreen({ navigation }) {
     // switch
 
@@ -48,11 +50,12 @@ export function ConfigurationScreen({ navigation }) {
     // save
     const saveDarkPreference = async (switchIsEnabled: boolean) => {
         await saveUserPreference('dark', switchIsEnabled.toString())
+        await colorsSingleton.updateInstance()
     }
 
     const saveFontSizePreference = async (fontSize: String) => {
-        console.log(`new font ${fontSize}`)
         await saveUserPreference('fontSize', fontSize)
+        await colorsSingleton.updateInstance()
     }
 
     const isFocused = useIsFocused()
