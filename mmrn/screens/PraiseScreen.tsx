@@ -3,8 +3,9 @@ import { ScrollView, Text, View, StatusBar } from 'react-native'
 import { readPraisesJson } from '../source/readPraisesJson'
 import { getRandomElementKey } from '../source/getRandomElementKey'
 import { useState, useEffect } from 'react'
-import { getColors, getDefaultColors } from '../source/darkMode/colors'
+import { getDefaultColors } from '../source/darkMode/colors'
 import { getUserModePreference } from '../source/darkMode/userPreference'
+import { colorsSingleton } from '../source/singletonManager'
 
 export function PraiseScreen({ navigation, route }) {
     // json
@@ -27,7 +28,7 @@ export function PraiseScreen({ navigation, route }) {
 
     const setColorMode = async () => {
         const userPreference = await getUserModePreference('dark')
-        const colors = await getColors()
+        const colors = await colorsSingleton.getInstance()
         if (userPreference) {
             setScrollViewColors(colors.containerDark)
             setTextColors(colors.textDark)

@@ -12,11 +12,13 @@ import { DropdownMenuList } from '../components/form/DropdownMenuList'
 import { readDataJson } from '../source/readDataJson.ts'
 import { orderPraises } from '../source/orderPraises'
 
-import { getColors, getDefaultColors } from '../source/darkMode/colors'
+import { getDefaultColors } from '../source/darkMode/colors'
 import { getUserModePreference } from '../source/darkMode/userPreference'
 import { useIsFocused } from '@react-navigation/native'
 
 import Settings from '../assets/icons/settings.png'
+
+import { colorsSingleton } from '../source/singletonManager.ts'
 
 export function HomeScreen({ navigation }) {
     // json
@@ -50,9 +52,10 @@ export function HomeScreen({ navigation }) {
 
     const setColorMode = async () => {
         const userPreference = await getUserModePreference('dark')
+        const colors = await colorsSingleton.getInstance()
+
         if (userPreference) {
             // dark mode
-            const colors = await getColors()
             setScrollViewColors(colors.containerDark)
             setTextColors(colors.textDark)
             setTitleColors(colors.titleDark)
@@ -63,7 +66,6 @@ export function HomeScreen({ navigation }) {
             })
         } else {
             // light mode
-            const colors = await getColors()
             setScrollViewColors(colors.containerLight)
             setTextColors(colors.textLight)
             setTitleColors(colors.titleLight)
@@ -159,6 +161,7 @@ export function HomeScreen({ navigation }) {
                 notFoundText={nameForNotFound}
                 dropdownStyle={dropDownStyle}
                 textDropdownStyle={textColors}
+                searchPlaceholderTextColor={textColors.color}
             />
             <StatusBar style={statusBarStyle} />
         </ScrollView>

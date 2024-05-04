@@ -16,6 +16,8 @@ interface DropdownProps {
         name: string
         id: number
     }*/
+    detailsItems?: any // used to search in itens
+    placeholder?: string
     onSelect: (selectedValue: string) => void
 }
 
@@ -34,8 +36,8 @@ export function Dropdown(props: DropdownProps) {
     const [visibleCloseDropdown, setVisibleCloseDropdown] = useState('hidden')
 
     const onChangeInput = () => {
-        // search the itens
         const value = inputRef.current!.value.toLocaleLowerCase()
+        // search the itens
         const elementsWithValue: SetStateAction<any[]> = []
         elements.forEach((item: [string, number]) => {
             const name = item[0]
@@ -44,6 +46,49 @@ export function Dropdown(props: DropdownProps) {
                 elementsWithValue.push([name, valueItem])
             }
         })
+
+        // search in the details items
+        const detailsItemsArray = Object.entries(props.detailsItems)
+        const detailItemsWithValue: SetStateAction<any[]> = []
+        detailsItemsArray.forEach((item) => {
+            const key = item[0]
+            const data = JSON.stringify(props.detailsItems[key]['data'])
+                .trim()
+                .toLowerCase()
+            if (data.includes(value)) {
+                detailItemsWithValue.push(key)
+            }
+        })
+
+        // add to elements
+        const detailItemsWithValueToAddInElementsWithValue: SetStateAction<
+            any[]
+        > = []
+
+        detailItemsWithValue.forEach((detailValue) => {
+            // get the correspondent elements
+            elements.forEach((item: [string, number]) => {
+                const name = item[0]
+                const valueItem = item[1]
+                if (valueItem === Number(detailValue)) {
+                    detailItemsWithValueToAddInElementsWithValue.push([
+                        name,
+                        valueItem,
+                    ])
+                }
+            })
+        })
+
+        // add to elementsWithValue if no longer exists
+
+        detailItemsWithValueToAddInElementsWithValue.forEach(
+            (elementToAppend) => {
+                if (!elementsWithValue.toString().includes(elementToAppend)) {
+                    elementsWithValue.push(elementToAppend)
+                }
+            }
+        )
+
         setElements(elementsWithValue)
     }
 
@@ -179,9 +224,9 @@ export function Dropdown(props: DropdownProps) {
                         }}
                         onFocus={onFocus}
                         onKeyDown={onKeyDown}
-                        className="outline-none"
+                        className="outline-none placeholder:text-black"
                         autoComplete="off"
-                        placeholder="Digite o nome do louvor"
+                        placeholder={props.placeholder}
                     />
                     <CircleX
                         onClick={closeMenu}
