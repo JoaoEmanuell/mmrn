@@ -1,5 +1,7 @@
 import axios from 'axios'
 import { RNFS, DOCUMENT_DIRECTORY } from './RNFS'
+import { Linking } from 'react-native'
+import AlertAsync from 'react-native-alert-async'
 
 const onlineRepositoryUrl =
     'https://raw.githubusercontent.com/JoaoEmanuell/mmrn/master'
@@ -16,40 +18,64 @@ const axiosConfig = axios.create({
     headers,
 })
 
+const praisesDownloadURL = 'https://praises-jp.vercel.app/download' // url to apk
+
 const getOnlineVersion = async () => {
     RNFS.readFile(`${DOCUMENT_DIRECTORY}version.js`).then((version) => {
         console.log(version)
-        axiosConfig.get('/mmrn/assets/json/version.js').then((response) => {
-            if (response.status === 200) {
-                const onlineVersion = response.data as String
-                console.log(`Online: ${onlineVersion}`)
-                if (version === undefined) {
-                    version = '65488771' // random numbers
-                }
-                if (version.trim() !== onlineVersion.trim()) {
-                    alert(
-                        'Novos louvores foram encontrados! Iniciando o download deles!'
-                    )
-                    console.log('Update the jsons!')
-                    updateJson() // update the jsons
-                    try {
-                        // update version.js file
-                        RNFS.writeFile(
-                            `${DOCUMENT_DIRECTORY}version.js`,
-                            onlineVersion.trim(),
-                            'utf8'
-                        ).then((data) => {
-                            console.log('version.js written successfully')
-                        })
-                        // file written successfully
-                    } catch (err) {
-                        console.error(
-                            `Error to get write the version js ${err.message}`
+        axiosConfig
+            .get('/mmrn/assets/json/version.js')
+            .then(async (response) => {
+                if (response.status === 200) {
+                    const onlineVersion = response.data as String
+                    console.log(`Online: ${onlineVersion}`)
+                    if (version === undefined) {
+                        version = '65488771' // random numbers
+                    }
+                    if (
+                        onlineVersion.split('-')[1] === 'newVersion' &&
+                        version.trim() !== onlineVersion.trim()
+                    ) {
+                        // new version available
+                        const choice = await AlertAsync(
+                            'Atualização',
+                            'Uma nova versão do aplicativo foi encontrada, ao clicar em OK você será redirecionado para o navegador para poder baixar a nova versão!\nCaso isso não aconteça, acesse https://praises-jp.vercel.app/download para poder baixar a nova versão!',
+                            [{ text: 'OK', onPress: () => 'ok' }]
                         )
+
+                        if (choice === 'ok') {
+                            try {
+                                await Linking.openURL(praisesDownloadURL)
+                            } catch (err) {
+                                alert(
+                                    'Não foi possível abrir o navegador, acesse https://praises-jp.vercel.app/download para poder baixar a nova versão!'
+                                )
+                            }
+                        }
+                    } else if (version.trim() !== onlineVersion.trim()) {
+                        alert(
+                            'Novos louvores foram encontrados! Iniciando o download deles!'
+                        )
+                        console.log('Update the jsons!')
+                        updateJson() // update the jsons
+                        try {
+                            // update version.js file
+                            RNFS.writeFile(
+                                `${DOCUMENT_DIRECTORY}version.js`,
+                                onlineVersion.trim(),
+                                'utf8'
+                            ).then((data) => {
+                                console.log('version.js written successfully')
+                            })
+                            // file written successfully
+                        } catch (err) {
+                            console.error(
+                                `Error to get write the version js ${err.message}`
+                            )
+                        }
                     }
                 }
-            }
-        })
+            })
     })
 }
 
@@ -138,14 +164,10 @@ export const startUpdateJson = async () => {
             !data.includes('data.json')
         ) {
             await getFirstAssetVersion()
-            await getOnlineVersion().then((data) => {
-                console.log('Get online with success!')
-            })
-        } else {
-            await getOnlineVersion().then((data) => {
-                console.log('Get online with success!')
-            })
         }
+        await getOnlineVersion().then((data) => {
+            console.log('Get online with success!')
+        })
     })
 }
 
