@@ -161,6 +161,7 @@ export function HomeScreen({ navigation }) {
                 notFoundText={nameForNotFound}
                 dropdownStyle={dropDownStyle}
                 textDropdownStyle={textColors}
+                searchPlaceholderTextColor={textColors.color}
             />
             <StatusBar style={statusBarStyle} />
         </ScrollView>

@@ -1,5 +1,5 @@
 import { View } from 'react-native'
-import { SelectList } from 'react-native-dropdown-select-list'
+import { SelectList } from '../react-native-dropdown-select-list'
 import { LabelFormControl } from './LabelFormControl'
 import { useState } from 'react'
 
@@ -13,6 +13,7 @@ interface DropdownMenuListProps {
         value: string
         disabled?: boolean
     }>
+    searchPlaceholderTextColor?: string
     setSelected: (value: string) => void
     searchPlaceholder: string
     notFoundText?: string
@@ -26,23 +27,23 @@ export function DropdownMenuList(props: DropdownMenuListProps) {
         disabled: true,
     }
 
-    const [previousValue, setPreviousValue] = useState('') // Armazena o valor anterior
+    const [previousValue, setPreviousValue] = useState('') // Save the before value
 
     const handleSelect = (value: string) => {
         if (value === previousValue) {
-            // Dispara o evento onSelect manualmente
+            // Dispatch manual onSelect
             props.setSelected(value)
             props.onSelect && props.onSelect()
         }
         props.setSelected(value)
-        setPreviousValue(value) // Atualiza o valor anterior
+        setPreviousValue(value) // Update the before value
     }
 
     return (
         <View className="mt-5">
             <LabelFormControl text={props.labelText} style={props.labelStyle} />
             <SelectList
-                setSelected={handleSelect} //{(val: string) => props.setSelected(val)}
+                setSelected={handleSelect}
                 data={props.data}
                 save="value"
                 defaultOption={defaultOption}
@@ -54,6 +55,7 @@ export function DropdownMenuList(props: DropdownMenuListProps) {
                 dropdownStyles={props.dropdownStyle}
                 dropdownTextStyles={props.textDropdownStyle}
                 inputStyles={props.textDropdownStyle}
+                searchPlaceholderTextColor={props.searchPlaceholderTextColor}
             />
         </View>
     )
