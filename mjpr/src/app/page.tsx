@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 
 export default function Home() {
     const [dropdownItems, setDropdownItens] = useState({ '': 0 }) //default
+    const [praisesGlobal, setPraisesGlobal] = useState({ '': 0 }) //default
 
     const onSelectDropdown = (selectedValue: string) => {
         const origin = new URL(window.location.href).origin
@@ -27,6 +28,19 @@ export default function Home() {
                 const praises = data['praises'] // get the praises
                 setDropdownItens(praises)
             })
+        const praisesUrl = `${origin}/json/praises.min.json`
+        fetch(praisesUrl, {
+            method: 'GET',
+            mode: 'cors',
+            cache: 'default',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                setPraisesGlobal(data)
+            })
     }, [])
 
     return (
@@ -44,8 +58,10 @@ export default function Home() {
             <div className="container mt-4 flex justify-center">
                 <Dropdown
                     dropdownItems={dropdownItems}
+                    detailsItems={praisesGlobal}
                     onSelect={onSelectDropdown}
                     labelText="Louvores: "
+                    placeholder="Digite o nome do louvor"
                 />
             </div>
         </main>
