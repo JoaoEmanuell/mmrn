@@ -224,7 +224,7 @@ export function Dropdown(props: DropdownProps) {
                         }}
                         onFocus={onFocus}
                         onKeyDown={onKeyDown}
-                        className="outline-none placeholder:text-black"
+                        className="outline-none placeholder:text-black w-[14rem]"
                         autoComplete="off"
                         placeholder={props.placeholder}
                     />
