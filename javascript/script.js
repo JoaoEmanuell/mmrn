@@ -47,7 +47,7 @@ const addSession = () => {
     // add to content
     content["data"][sessionCount.toString()] = []
     sessionLines.forEach(line => {
-        content["data"][sessionCount.toString()].push([line])
+        content["data"][sessionCount.toString()].push(line)
     });
     // reset
     sessionInput.value = ''
@@ -61,7 +61,7 @@ const editSession = (sessionId) => {
     const sessionContent = content["data"][id]
     let text = "";
     sessionContent.forEach(subArray => {
-        text += subArray[0] + "\n";
+        text += subArray + "\n";
     });
     const sessionInput = document.getElementById("sessionInput")
     sessionInput.value = text
@@ -121,7 +121,7 @@ const setContentInEditSession = () => {
 
         let text = "";
         data[1].forEach(subArray => {
-            text += subArray[0] + "<br>";
+            text += subArray + "<br>";
         });
 
         paragraph.innerHTML = text
@@ -159,7 +159,7 @@ const showInThePreview = () => {
         paragraph.classList.add("mt-4")
         let text = "";
         content["data"][treadedSession].forEach(subArray => {
-            text += subArray[0] + "<br>";
+            text += subArray + "<br>";
         });
         paragraph.innerHTML = text
         previewDiv.appendChild(paragraph)
