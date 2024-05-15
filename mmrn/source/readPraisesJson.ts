@@ -9,15 +9,29 @@ interface praisesJson {
     }
 }
 
-export async function readPraisesJson(): Promise<string | praisesJson> {
+export async function readPraisesJson(
+    id: string
+): Promise<string | praisesJson> {
     try {
         const documentDirList = await RNFS.readdir(DOCUMENT_DIRECTORY)
-        if (!documentDirList.includes('praises.json')) {
-            // praises.json not in document dir
+        let praisesDirExists
+        try {
+            await RNFS.readdir(`${DOCUMENT_DIRECTORY}/praises`)
+            praisesDirExists = false
+        } catch (err) {
+            praisesDirExists = true
+            console.log('praises dir not exist')
+        }
+
+        if (
+            !documentDirList.includes('praises.json') ||
+            praisesDirExists === true
+        ) {
+            // praises not in praises
             const praisesJson = require('../assets/json/praises.json')
             return praisesJson
         } else {
-            return RNFS.readFile(`${DOCUMENT_DIRECTORY}praises.json`)
+            return RNFS.readFile(`${DOCUMENT_DIRECTORY}/praises/${id}.json`)
         }
     } catch (error) {
         console.error('Erro ao ler o arquivo JSON:', error)

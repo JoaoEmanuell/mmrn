@@ -1,5 +1,6 @@
 'use client'
 
+import { fetchHeaders } from '@/lib/fetchHeaders'
 import { getRandomElementKey } from '@/lib/randomElementKey'
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -19,17 +20,21 @@ export default function PraisePage() {
     useEffect(() => {
         const id = params['id'] as string
         const origin = new URL(window.location.href).origin
-        const data = `${origin}/json/data.min.json`
-        fetch(data, {
-            method: 'GET',
-            mode: 'cors',
-            cache: 'force-cache',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+        const praiseUrl = `${origin}/json/praises/${id}.json`
+        // set praise
+        fetch(praiseUrl, fetchHeaders).then((res) => {
+            if (res.status === 404) {
+                alert('Louvor inválido')
+                window.location.replace(`/`)
+            } else {
+                res.json().then((data) => {
+                    setJson(data)
+                })
+            }
         })
-            .then((res) => res.json())
-            .then((data) => {
+        // set title
+        fetch(`${origin}/json/data.min.json`, fetchHeaders).then((res) =>
+            res.json().then((data) => {
                 const praises = data['praises'] // get the praises
                 // get the praise title
                 Object.entries(praises).forEach((praiseData) => {
@@ -39,26 +44,7 @@ export default function PraisePage() {
                     }
                 })
             })
-        // get praise
-        const praises = `${origin}/json/praises.min.json`
-        fetch(praises, {
-            method: 'GET',
-            mode: 'cors',
-            cache: 'force-cache',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                if (!data.hasOwnProperty(id)) {
-                    alert('Louvor inválido')
-                    window.location.replace(`/`)
-                } else {
-                    console.log(data[id])
-                    setJson(data[id])
-                }
-            })
+        )
     }, [])
 
     return (

@@ -1,7 +1,8 @@
 'use client'
 
 import { Dropdown } from '@/components/Dropdown'
-import { useEffect, useState } from 'react'
+import { fetchHeaders } from '@/lib/fetchHeaders'
+import { SetStateAction, useEffect, useState } from 'react'
 
 export default function Home() {
     const [dropdownItems, setDropdownItens] = useState({ '': 0 }) //default
@@ -15,31 +16,22 @@ export default function Home() {
     useEffect(() => {
         const origin = new URL(window.location.href).origin
         const data = `${origin}/json/data.min.json`
-        fetch(data, {
-            method: 'GET',
-            mode: 'cors',
-            cache: 'default',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
+        fetch(data, fetchHeaders)
             .then((res) => res.json())
             .then((data) => {
                 const praises = data['praises'] // get the praises
                 setDropdownItens(praises)
-            })
-        const praisesUrl = `${origin}/json/praises.min.json`
-        fetch(praisesUrl, {
-            method: 'GET',
-            mode: 'cors',
-            cache: 'default',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                setPraisesGlobal(data)
+                const basePraiseUrl = `${origin}/json/praises`
+                const globalPraises = {} as SetStateAction<{ '': number }>
+                Object.keys(praises).forEach((praise) => {
+                    const praiseId = praises[praise].toString() as string
+                    fetch(`${basePraiseUrl}/${praiseId}.json`, fetchHeaders)
+                        .then((res) => res.json())
+                        .then((data) => {
+                            globalPraises[praiseId] = data
+                        })
+                })
+                setPraisesGlobal(globalPraises)
             })
     }, [])
 
@@ -61,7 +53,7 @@ export default function Home() {
                     detailsItems={praisesGlobal}
                     onSelect={onSelectDropdown}
                     labelText="Louvores: "
-                    placeholder="Digite o nome do louvor"
+                    placeholder="Digite o nome ou letra do louvor"
                 />
             </div>
         </main>
