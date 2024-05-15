@@ -1,10 +1,14 @@
-import axios from 'axios'
 import { RNFS, DOCUMENT_DIRECTORY } from './RNFS'
 import { Linking } from 'react-native'
 import AlertAsync from 'react-native-alert-async'
+import { unzip } from 'react-native-zip-archive'
+import { FetchManager } from './fetchManager'
 
 const onlineRepositoryUrl =
     'https://raw.githubusercontent.com/JoaoEmanuell/mmrn/master'
+
+const praisesZipUrl =
+    'https://github.com/JoaoEmanuell/mmrn/raw/master/mjpr/public/json/praises.zip'
 
 const headers = {
     Accept: 'application/json, text/plain, */*',
@@ -12,22 +16,22 @@ const headers = {
         'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
 }
 
-const axiosConfig = axios.create({
-    baseURL: onlineRepositoryUrl,
-    timeout: 3000, // 3 seconds
-    headers,
-})
+const fetchManager = new FetchManager(
+    onlineRepositoryUrl,
+    headers as RequestInit
+)
 
 const praisesDownloadURL = 'https://praises-jp.vercel.app/download' // url to apk
 
 const getOnlineVersion = async () => {
     RNFS.readFile(`${DOCUMENT_DIRECTORY}version.js`).then((version) => {
         console.log(version)
-        axiosConfig
+        fetchManager
             .get('/mmrn/assets/json/version.js')
             .then(async (response) => {
                 if (response.status === 200) {
-                    const onlineVersion = response.data as String
+                    const data = await response.text()
+                    const onlineVersion = data as String
                     console.log(`Online: ${onlineVersion}`)
                     if (version === undefined) {
                         version = '65488771' // random numbers
@@ -82,41 +86,28 @@ const getOnlineVersion = async () => {
 const updateJson = async () => {
     // get the new jsons
 
-    // get the data.json
+    const filePath = `${DOCUMENT_DIRECTORY}/praises.zip`
 
-    const dataResponse = await axiosConfig.get('/mmrn/assets/json/data.json')
-
-    if (dataResponse.status === 200) {
-        try {
-            await RNFS.writeFile(
-                `${DOCUMENT_DIRECTORY}data.json`,
-                JSON.stringify(dataResponse.data),
-                'utf8'
-            )
-            console.log('data.json written successfully')
-        } catch (err) {
-            console.error(`Error to save data json: ${err.message}`)
-        }
-    }
-
-    // get the praises.json
-
-    const praisesResponse = await axiosConfig.get(
-        '/mmrn/assets/json/praises.json'
-    )
-    if (praisesResponse.status === 200) {
-        console.log('Praises json download')
-        try {
-            await RNFS.writeFile(
-                `${DOCUMENT_DIRECTORY}praises.json`,
-                JSON.stringify(praisesResponse.data),
-                'utf8'
-            )
-            console.log('praises.json written successfully')
-        } catch (err) {
-            console.error(`Error to save praise json: ${err.message}`)
-        }
-    }
+    RNFS.downloadFile({
+        fromUrl: praisesZipUrl,
+        toFile: filePath,
+        progress: (res) => {
+            const progress = (res.bytesWritten / res.contentLength) * 100
+            console.log(`Progress: ${progress.toFixed(2)}%`)
+        },
+    })
+        .promise.then((response) => {
+            console.log('Zip download with success!', response)
+            unzip(filePath, DOCUMENT_DIRECTORY).then((path) => {
+                console.log(`Completed extraction in ${path}`)
+                RNFS.unlink(filePath)
+                console.log('zip deleted')
+            })
+        })
+        .catch((err) => {
+            console.log('Zip download error:', err)
+            alert('Erro ao baixar os louvores!')
+        })
 }
 
 const getFirstAssetVersion = async () => {

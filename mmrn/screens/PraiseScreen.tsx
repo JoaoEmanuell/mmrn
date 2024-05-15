@@ -52,14 +52,13 @@ export function PraiseScreen({ navigation, route }) {
 
     useEffect(() => {
         setColorMode()
-        readPraisesJson().then((data) => {
+        const praiseId = String(route.params.praiseNumber)
+        readPraisesJson(praiseId).then((data) => {
             if (typeof data === 'object') {
-                const praiseNumber = String(route.params.praiseNumber)
-                setPraise(data[praiseNumber])
+                setPraise(data[praiseId])
             } else {
-                const praiseJsonParse = JSON.parse(data as unknown as string)
-                const praiseNumber = String(route.params.praiseNumber)
-                setPraise(praiseJsonParse[praiseNumber])
+                const praiseJson = JSON.parse(data as unknown as string)
+                setPraise(praiseJson)
             }
         })
     }, [navigation])
@@ -94,7 +93,7 @@ export function PraiseScreen({ navigation, route }) {
                                         key={getRandomElementKey()}
                                         className="text-center text-base"
                                     >
-                                        {line[0]}
+                                        {line}
                                     </Text>
                                 )
                             })}
