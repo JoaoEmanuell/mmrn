@@ -24,7 +24,7 @@ export async function readPraisesJson(
         }
 
         if (
-            !documentDirList.includes('praises.json') ||
+            !documentDirList.includes('data.min.json') ||
             praisesDirExists === true
         ) {
             // praises not in praises
