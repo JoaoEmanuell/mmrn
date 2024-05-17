@@ -24,57 +24,34 @@ const fetchManager = new FetchManager(
 const praisesDownloadURL = 'https://praises-jp.vercel.app/download' // url to apk
 
 const getOnlineVersion = async () => {
-    RNFS.readFile(`${DOCUMENT_DIRECTORY}version.js`).then((version) => {
+    RNFS.readFile(`${DOCUMENT_DIRECTORY}praisesVersion.js`).then((version) => {
         console.log(version)
         fetchManager
-            .get('/mmrn/assets/json/version.js')
+            .get('/mmrn/assets/json/praisesVersion.js')
             .then(async (response) => {
                 if (response.status === 200) {
                     const data = await response.text()
                     const onlineVersion = data.trim() as String
-                    const onlinePrefix = onlineVersion
-                        .split('-')[1]
-                        .replaceAll("'", '')
-                        .trim()
-
                     if (version === undefined) {
                         version = '65488771' // random numbers
                     }
                     const localVersion = version.trim()
-                    if (
-                        onlinePrefix === 'newVersion' &&
-                        localVersion !== onlineVersion
-                    ) {
-                        // new version available
-                        const choice = await AlertAsync(
-                            'Atualização',
-                            'Uma nova versão do aplicativo foi encontrada, ao clicar em OK você será redirecionado para o navegador para poder baixar a nova versão!\nCaso isso não aconteça, acesse https://praises-jp.vercel.app/download para poder baixar a nova versão!',
-                            [{ text: 'OK', onPress: () => 'ok' }]
-                        ) // show the alert and await the user confirmation
-
-                        if (choice === 'ok') {
-                            try {
-                                await Linking.openURL(praisesDownloadURL) // open the browser
-                            } catch (err) {
-                                alert(
-                                    'Não foi possível abrir o navegador, acesse https://praises-jp.vercel.app/download para poder baixar a nova versão!'
-                                )
-                            }
-                        }
-                    } else if (localVersion !== onlineVersion) {
+                    if (localVersion !== onlineVersion) {
                         alert(
                             'Novos louvores foram encontrados! Iniciando o download deles!'
                         )
                         console.log('Update the jsons!')
                         updateJson() // update the jsons
                         try {
-                            // update version.js file
+                            // update praisesVersion.js file
                             RNFS.writeFile(
-                                `${DOCUMENT_DIRECTORY}version.js`,
+                                `${DOCUMENT_DIRECTORY}praisesVersion.js`,
                                 onlineVersion.trim(),
                                 'utf8'
                             ).then((data) => {
-                                console.log('version.js written successfully')
+                                console.log(
+                                    'praisesVersion.js written successfully'
+                                )
                             })
                             // file written successfully
                         } catch (err) {
@@ -86,6 +63,38 @@ const getOnlineVersion = async () => {
                 }
             })
     })
+}
+
+const updateNewVersion = async () => {
+    const applicationVersionJS = require('../assets/json/applicationVersion.js')
+    const applicationVersion = `export const version = '${applicationVersionJS.version}'`
+
+    fetchManager
+        .get('/mmrn/assets/json/applicationVersion.js')
+        .then(async (response) => {
+            if (response.status === 200) {
+                await response.text().then(async (data) => {
+                    const onlineApplicationVersion = data.trim()
+                    if (onlineApplicationVersion !== applicationVersion) {
+                        // new version available
+                        const choice = await AlertAsync(
+                            'Atualização',
+                            'Uma nova versão do aplicativo foi encontrada, ao clicar em OK você será redirecionado para o navegador para poder baixar a nova versão!\nCaso isso não aconteça, acesse https://praises-jp.vercel.app/download para poder baixar a nova versão!',
+                            [{ text: 'OK', onPress: () => 'ok' }]
+                        ) // show the alert and await the user confirmation
+                        if (choice === 'ok') {
+                            try {
+                                await Linking.openURL(praisesDownloadURL) // open the browser
+                            } catch (err) {
+                                alert(
+                                    'Não foi possível abrir o navegador, acesse https://praises-jp.vercel.app/download para poder baixar a nova versão!'
+                                )
+                            }
+                        }
+                    }
+                })
+            }
+        })
 }
 
 const updateJson = async () => {
@@ -118,23 +127,29 @@ const updateJson = async () => {
 const getFirstAssetVersion = async () => {
     /* Move the saved files in assets do DOCUMENT DIRECTORY */
 
-    // version.js
+    // praisesVersion.js
 
-    const versionJs = require('../assets/json/version.js')
+    const praiseVersion = require('../assets/json/praisesVersion.js')
     RNFS.writeFile(
-        `${DOCUMENT_DIRECTORY}version.js`,
-        `export const version = '${versionJs.version}'`,
+        `${DOCUMENT_DIRECTORY}praisesVersion.js`,
+        `export const version = '${praiseVersion.version}'`,
         'utf8'
     ).then((data) => {
-        console.log('version.js written successfully')
+        console.log('praisesVersion.js written successfully')
     })
 }
 
 export const startUpdateJson = async () => {
     RNFS.readdir(DOCUMENT_DIRECTORY).then(async (data) => {
-        if (!data.includes('version.js') || !data.includes('data.min.json')) {
+        if (
+            !data.includes('praisesVersion.js') ||
+            !data.includes('data.min.json')
+        ) {
             await getFirstAssetVersion()
         }
+        await updateNewVersion().then((data) => {
+            console.log('get the new version success!')
+        })
         await getOnlineVersion().then((data) => {
             console.log('Get online with success!')
         })
@@ -145,7 +160,7 @@ const clearData = async () => {
     // simulate a first execution
     // not used in production!
     try {
-        await RNFS.unlink(`${DOCUMENT_DIRECTORY}version.js`)
+        await RNFS.unlink(`${DOCUMENT_DIRECTORY}praisesVersion.js`)
     } catch (err) {}
     try {
         await RNFS.unlink(`${DOCUMENT_DIRECTORY}data.json`)
