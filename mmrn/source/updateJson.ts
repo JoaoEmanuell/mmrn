@@ -31,32 +31,37 @@ const getOnlineVersion = async () => {
             .then(async (response) => {
                 if (response.status === 200) {
                     const data = await response.text()
-                    const onlineVersion = data as String
-                    console.log(`Online: ${onlineVersion}`)
+                    const onlineVersion = data.trim() as String
+                    const onlinePrefix = onlineVersion
+                        .split('-')[1]
+                        .replaceAll("'", '')
+                        .trim()
+
                     if (version === undefined) {
                         version = '65488771' // random numbers
                     }
+                    const localVersion = version.trim()
                     if (
-                        onlineVersion.split('-')[1] === 'newVersion' &&
-                        version.trim() !== onlineVersion.trim()
+                        onlinePrefix === 'newVersion' &&
+                        localVersion !== onlineVersion
                     ) {
                         // new version available
                         const choice = await AlertAsync(
                             'Atualização',
                             'Uma nova versão do aplicativo foi encontrada, ao clicar em OK você será redirecionado para o navegador para poder baixar a nova versão!\nCaso isso não aconteça, acesse https://praises-jp.vercel.app/download para poder baixar a nova versão!',
                             [{ text: 'OK', onPress: () => 'ok' }]
-                        )
+                        ) // show the alert and await the user confirmation
 
                         if (choice === 'ok') {
                             try {
-                                await Linking.openURL(praisesDownloadURL)
+                                await Linking.openURL(praisesDownloadURL) // open the browser
                             } catch (err) {
                                 alert(
                                     'Não foi possível abrir o navegador, acesse https://praises-jp.vercel.app/download para poder baixar a nova versão!'
                                 )
                             }
                         }
-                    } else if (version.trim() !== onlineVersion.trim()) {
+                    } else if (localVersion !== onlineVersion) {
                         alert(
                             'Novos louvores foram encontrados! Iniciando o download deles!'
                         )
