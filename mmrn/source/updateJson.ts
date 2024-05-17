@@ -128,37 +128,11 @@ const getFirstAssetVersion = async () => {
     ).then((data) => {
         console.log('version.js written successfully')
     })
-
-    // data.json
-
-    const dataJson = require('../assets/json/data.json')
-    RNFS.writeFile(
-        `${DOCUMENT_DIRECTORY}data.json`,
-        `${JSON.stringify(dataJson)}`,
-        'utf8'
-    ).then((data) => {
-        console.log('data.json written successfully')
-    })
-
-    // praises.json
-
-    const praisesJson = require('../assets/json/praises.json')
-    RNFS.writeFile(
-        `${DOCUMENT_DIRECTORY}praises.json`,
-        JSON.stringify(praisesJson),
-        'utf8'
-    ).then((data) => {
-        console.log('praises.json written successfully')
-    })
 }
 
 export const startUpdateJson = async () => {
     RNFS.readdir(DOCUMENT_DIRECTORY).then(async (data) => {
-        if (
-            !data.includes('version.js') ||
-            !data.includes('praises.json') ||
-            !data.includes('data.json')
-        ) {
+        if (!data.includes('version.js') || !data.includes('data.min.json')) {
             await getFirstAssetVersion()
         }
         await getOnlineVersion().then((data) => {
