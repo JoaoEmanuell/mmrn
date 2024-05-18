@@ -2,6 +2,7 @@
   - [About](#about)
   - [Develop](#develop)
     - [Starting](#starting)
+      - [Web](#web)
       - [Mobile](#mobile)
 
 [Português Brasil](./docs/pt-br/README.md)
