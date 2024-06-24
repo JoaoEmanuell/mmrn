@@ -1,85 +1,17 @@
 'use client'
 
-import { fetchHeaders } from '@/lib/fetchHeaders'
-import { getRandomElementKey } from '@/lib/randomElementKey'
+import { Praise } from '@/components/body/Praise'
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-interface jsonInterface {
-    organization: string[]
-    data: {
-        [key: string]: string[][]
-    }
-}
-
 export default function PraisePage() {
     const params = useParams()
-    const [json, setJson] = useState<jsonInterface | null>()
-    const [praiseTitle, setPraiseTitle] = useState('')
+    const [id, setId] = useState<string | null>(null)
 
     useEffect(() => {
         const id = params['id'] as string
-        const origin = new URL(window.location.href).origin
-        const praiseUrl = `${origin}/json/praises/${id}.json`
-        // set praise
-        fetch(praiseUrl, fetchHeaders).then((res) => {
-            if (res.status === 404) {
-                alert('Louvor inválido')
-                window.location.replace(`/`)
-            } else {
-                res.json().then((data) => {
-                    setJson(data)
-                })
-            }
-        })
-        // set title
-        fetch(`${origin}/json/data.min.json`, fetchHeaders).then((res) =>
-            res.json().then((data) => {
-                const praises = data['praises'] // get the praises
-                // get the praise title
-                Object.entries(praises).forEach((praiseData) => {
-                    const praiseId = praiseData[1] as number
-                    if (praiseId.toString() === id) {
-                        setPraiseTitle(praiseData[0].split(' - ')[1]) // remove the identifier
-                    }
-                })
-            })
-        )
+        setId(id)
     }, [])
 
-    return (
-        <main className={`mb-4`}>
-            <div className="container mt-4">
-                <h1 className="text-center font-bold text-2xl">
-                    {praiseTitle}
-                </h1>
-            </div>
-            <div className="container mt-4 text-center text-xl">
-                {json &&
-                    json['organization'].map((organizationValue) => {
-                        const data = json['data'][organizationValue]
-                        return (
-                            <div
-                                className="mt-4 px-2 space-y-1"
-                                key={getRandomElementKey()}
-                            >
-                                {data.map((paragraph) => {
-                                    if (paragraph.toString() === '') {
-                                        return (
-                                            <br key={getRandomElementKey()} />
-                                        )
-                                    } else {
-                                        return (
-                                            <p key={getRandomElementKey()}>
-                                                {paragraph}
-                                            </p>
-                                        )
-                                    }
-                                })}
-                            </div>
-                        )
-                    })}
-            </div>
-        </main>
-    )
+    return id ? <Praise id={id} /> : 'Carregando louvor!'
 }
