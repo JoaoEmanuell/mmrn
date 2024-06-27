@@ -46,48 +46,53 @@ export function Dropdown(props: DropdownProps) {
                 elementsWithValue.push([name, valueItem])
             }
         })
-
-        // search in the details items
-        const detailsItemsArray = Object.entries(props.detailsItems)
-        const detailItemsWithValue: SetStateAction<any[]> = []
-        detailsItemsArray.forEach((item) => {
-            const key = item[0]
-            const data = JSON.stringify(props.detailsItems[key]['data'])
-                .trim()
-                .toLowerCase()
-            if (data.includes(value)) {
-                detailItemsWithValue.push(key)
-            }
-        })
-
-        // add to elements
-        const detailItemsWithValueToAddInElementsWithValue: SetStateAction<
-            any[]
-        > = []
-
-        detailItemsWithValue.forEach((detailValue) => {
-            // get the correspondent elements
-            elements.forEach((item: [string, number]) => {
-                const name = item[0]
-                const valueItem = item[1]
-                if (valueItem === Number(detailValue)) {
-                    detailItemsWithValueToAddInElementsWithValue.push([
-                        name,
-                        valueItem,
-                    ])
+        try {
+            // search in the details items
+            const detailsItemsArray = Object.entries(props.detailsItems)
+            const detailItemsWithValue: SetStateAction<any[]> = []
+            detailsItemsArray.forEach((item) => {
+                const key = item[0]
+                const data = JSON.stringify(props.detailsItems[key]['data'])
+                    .trim()
+                    .toLowerCase()
+                if (data.includes(value)) {
+                    detailItemsWithValue.push(key)
                 }
             })
-        })
 
-        // add to elementsWithValue if no longer exists
+            // add to elements
+            const detailItemsWithValueToAddInElementsWithValue: SetStateAction<
+                any[]
+            > = []
 
-        detailItemsWithValueToAddInElementsWithValue.forEach(
-            (elementToAppend) => {
-                if (!elementsWithValue.toString().includes(elementToAppend)) {
-                    elementsWithValue.push(elementToAppend)
+            detailItemsWithValue.forEach((detailValue) => {
+                // get the correspondent elements
+                elements.forEach((item: [string, number]) => {
+                    const name = item[0]
+                    const valueItem = item[1]
+                    if (valueItem === Number(detailValue)) {
+                        detailItemsWithValueToAddInElementsWithValue.push([
+                            name,
+                            valueItem,
+                        ])
+                    }
+                })
+            })
+
+            // add to elementsWithValue if no longer exists
+
+            detailItemsWithValueToAddInElementsWithValue.forEach(
+                (elementToAppend) => {
+                    if (
+                        !elementsWithValue.toString().includes(elementToAppend)
+                    ) {
+                        elementsWithValue.push(elementToAppend)
+                    }
                 }
-            }
-        )
+            )
+        } catch (err) {
+            console.log(`Detail search err: ${err}`)
+        }
 
         setElements(elementsWithValue)
     }
