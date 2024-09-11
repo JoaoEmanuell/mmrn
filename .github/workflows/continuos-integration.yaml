@@ -1,0 +1,22 @@
+name: Continuos Integration
+
+on: 
+  pull_request:
+    branches:
+      ["master"]
+
+jobs:
+  continuos_integration:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3 # Clone the repository to vm
+      - name: Using Node.js
+        uses: actions/setup-node@v2 # Install the node in vm
+        with:
+          node-version: 20.
+      - name: run install and build
+        run: |
+          cd mjpr
+          npm install
+          npm run build
